@@ -1,12 +1,14 @@
 package com.xclenter.test.listener.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.xclenter.test.util.addlistener.ui.UIAddListenerUtil;
 
 public class WindowListener implements IWindowListener{
-
+	private static Logger logger = LogManager.getLogger("MessageLog");
 	@Override
 	public void windowActivated(IWorkbenchWindow window) {
 		return;
@@ -24,7 +26,7 @@ public class WindowListener implements IWindowListener{
 
 	@Override
 	public void windowOpened(IWorkbenchWindow window) {
-		System.out.println(window.getActivePage().getLabel() +"     opened: windowListener");
+		logger.info("window::"+window.getActivePage().getLabel() +"::opened");
 		UIAddListenerUtil.addWindowListener(window);
 	}
 

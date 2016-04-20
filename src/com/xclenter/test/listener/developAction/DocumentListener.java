@@ -19,7 +19,7 @@ public class DocumentListener implements IDocumentListener{
 	
 	@Override
 	public void documentAboutToBeChanged(DocumentEvent event) {
-		
+
 	}
 
 	@Override

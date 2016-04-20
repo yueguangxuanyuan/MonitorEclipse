@@ -1,6 +1,7 @@
 package com.xclenter.test.util.context;
 
 import com.xclenter.test.util.documentDelta.DocumentDeltaRecorder;
+import com.xclenter.test.util.selectDelta.TextSelectionRecorder;
 
 //上下文管理模块 用来统一管理上下文
 public class ContextUtil {

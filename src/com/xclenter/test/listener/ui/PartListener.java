@@ -1,13 +1,17 @@
 package com.xclenter.test.listener.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.xclenter.test.util.addlistener.developAction.DevelopActionAddListenerUtil;
+import com.xclenter.test.util.addlistener.developAction.AddDocumentListenerUtil;
 import com.xclenter.test.util.context.ContextUtil;
 
 public class PartListener implements IPartListener{
+	
+	private static Logger logger = LogManager.getLogger("MessageLog");
 	private ContextUtil contextUtil;
 	
 	public PartListener() {
@@ -16,9 +20,10 @@ public class PartListener implements IPartListener{
 	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
+		logger.info("part::"+part.getTitle() + "::actived");
 		if (part instanceof IEditorPart) {
 			IEditorPart editorPart = (IEditorPart) part;
-			System.out.println("partListener editor active :site: " + editorPart.getEditorInput().getToolTipText() );
+//			logger.info("part editor::" + editorPart.getEditorInput().getToolTipText()+"::actived" );
 			contextUtil.notifyEditorFileContextMayChange("/"+editorPart.getEditorInput().getToolTipText());
 		}	
 		return;
@@ -31,11 +36,7 @@ public class PartListener implements IPartListener{
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
-		System.out.println(part.getTitle() + "   closed : partListener");
-		if (part instanceof IEditorPart) {
-			IEditorPart editorPart = (IEditorPart) part;
-			System.out.println("partListener editor closed :site: " + editorPart.getEditorInput().getToolTipText() );
-		}
+		logger.info("part::"+part.getTitle() + "::closed");
 		return;
 	}
 
@@ -46,10 +47,10 @@ public class PartListener implements IPartListener{
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		System.out.println(part.getTitle() + "   opened : partListener");
+		logger.info("part::" + part.getTitle() + "::opened");
 		if (part instanceof IEditorPart) {
 			IEditorPart editorPart = (IEditorPart) part;
-			DevelopActionAddListenerUtil.addDocumentListener(editorPart);
+			AddDocumentListenerUtil.addDocumentListener(editorPart);
 		}
 		return;
 	}

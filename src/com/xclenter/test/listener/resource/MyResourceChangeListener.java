@@ -1,5 +1,7 @@
 package com.xclenter.test.listener.resource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -10,12 +12,13 @@ import org.eclipse.core.runtime.CoreException;
 import com.xclenter.test.util.documentDelta.DocumentDeltaRecorder;
 
 public class MyResourceChangeListener implements IResourceChangeListener {
+	private static Logger logger = LogManager.getLogger("MessageLog");
 	@Override
 	public void resourceChanged(IResourceChangeEvent resourceChangeEvent) {
 		 IResource resource = resourceChangeEvent.getResource();
 		switch (resourceChangeEvent.getType()) {
 		case IResourceChangeEvent.POST_CHANGE:
-			//System.out.println("post change " + this.getClass().getName());
+			log("post change",resource);
 			//分析delta并读取出来
 			IResourceDelta resourceDelta = resourceChangeEvent.getDelta();
 			try {
@@ -26,35 +29,39 @@ public class MyResourceChangeListener implements IResourceChangeListener {
 			}
 			break;
 		case IResourceChangeEvent.POST_BUILD:
-			System.out.println("post build " + this.getClass().getName());
+			log("post build",resource);
 			break;
 		case IResourceChangeEvent.PRE_BUILD:
-			System.out.println("pre build " + this.getClass().getName());
+			log("pre build",resource);
 			break;
 		case IResourceChangeEvent.PRE_CLOSE:
-			 System.out.print("Project ");
-             System.out.print(resource.getFullPath());
-             System.out.println(" is about to close.");
+			log("pre close",resource);
 			break;
 		case IResourceChangeEvent.PRE_DELETE:
-			System.out.print("Project ");
-            System.out.print(resource.getFullPath());
-            System.out.println(" is about to be deleted.");
+			log("pre delete",resource);
 			break;
 		case IResourceChangeEvent.PRE_REFRESH:
-			System.out.println("pre refresh " + this.getClass().getName());
+			log("pre refresh",resource);
 			break;
 		default:
-			System.out.println("unknow type " + this.getClass().getName());
+			log("unknow type",resource);
 
 		}
 
 	}
+	
+	private void log(String type, IResource resource){
+		if(resource != null){
+			logger.info("type:"+type+"::" + resource.getFullPath());
+		}
+	}
 }
 
 class DeltaPrinter implements IResourceDeltaVisitor {
-	DocumentDeltaRecorder documentDeltaRecorder;
 	
+	private static Logger logger = LogManager.getLogger("MessageLog");
+	private DocumentDeltaRecorder documentDeltaRecorder;
+
 	public DeltaPrinter(){
 		documentDeltaRecorder = DocumentDeltaRecorder.getDocumentDeltaRecorder();
 	}
@@ -63,10 +70,10 @@ class DeltaPrinter implements IResourceDeltaVisitor {
        boolean doVisitChildren = true;
        switch (delta.getKind()) {
           case IResourceDelta.ADDED:
-             System.out.println("Resource " +res.getFullPath()  + "added");
+             logger.info("Resource::" +res.getFullPath()  + "::added");
              break;
           case IResourceDelta.REMOVED:
-             System.out.println("Resource "+ res.getFullPath() +" removed");
+             logger.info("Resource::"+ res.getFullPath() +"::removed");
              break;
           case IResourceDelta.CHANGED:
         	 switch(delta.getFlags()){
@@ -78,7 +85,7 @@ class DeltaPrinter implements IResourceDeltaVisitor {
         	 switch(res.getType()){
         	 case IResource.FILE:
         		 documentDeltaRecorder.notifyFlushLog(res.getFullPath().toString());;
-        		 System.out.println("Resource " +res.getFullPath() +" changed ");
+        		 logger.info("Resource::" +res.getFullPath() +"::changed ");
                  break;
              default:
         	 }

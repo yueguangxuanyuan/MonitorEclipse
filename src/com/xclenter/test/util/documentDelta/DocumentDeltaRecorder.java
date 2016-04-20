@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 
 public class DocumentDeltaRecorder {
-	private static Logger logger = LogManager.getLogger("HelloWorld");  
+	private static Logger logger = LogManager.getLogger("MessageLog");  
 	
 	private final int INIT = 1;
 
@@ -188,7 +188,6 @@ public class DocumentDeltaRecorder {
 						+ line + "," + lineOffset + " ::length:: "
 						+ deleteCharNum;
 				logger.info(message);
-//				System.out.println(message);
 			}
 		case INSERT:
 			if(deltaStringBulider.length() > 0){
@@ -197,7 +196,6 @@ public class DocumentDeltaRecorder {
 						+ line + "," + lineOffset + " ::text:: "
 						+ deltaStringBulider.toString();
 				logger.info(message);
-//				System.out.println(message);
 			}
 		default:
 			break;
