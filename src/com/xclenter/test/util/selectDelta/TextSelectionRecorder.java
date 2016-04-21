@@ -86,7 +86,7 @@ public class TextSelectionRecorder {
 
 	private void log() {
 		if (pLength != 0) {
-			logger.info("file-" + pFilePath + "-offset-" + pOffset + "-text-"
+			logger.info("Select-file-" + pFilePath + "-offset-" + pOffset + "-text-"
 					+ pText + "-length-" + pLength);
 		}
 	}

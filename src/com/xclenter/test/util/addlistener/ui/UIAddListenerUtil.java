@@ -6,9 +6,9 @@ import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 
+import com.xclenter.test.listener.developAction.SelectionListener;
 import com.xclenter.test.listener.ui.PartListener;
 import com.xclenter.test.listener.ui.PerspectitveListener;
-import com.xclenter.test.listener.ui.SelectionListener;
 
 
 public class UIAddListenerUtil {

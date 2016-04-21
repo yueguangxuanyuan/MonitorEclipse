@@ -96,6 +96,10 @@ public class DocumentDeltaRecorder {
 			offset = fOffset;
 			line = fline;
 			lineOffset = flineOffset;
+			
+			if(ftext != null && ftext.length() > 0){
+				notifyDocumentChange(fline, flineOffset, fOffset, 0, ftext);
+			}
 		} else {
 			int result = judgeInsertContent(ftext);
 
