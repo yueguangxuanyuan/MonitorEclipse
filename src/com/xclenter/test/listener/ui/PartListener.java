@@ -20,10 +20,9 @@ public class PartListener implements IPartListener{
 	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		logger.info("part::"+part.getTitle() + "::actived");
+		log(part.getTitle(),"actived");
 		if (part instanceof IEditorPart) {
 			IEditorPart editorPart = (IEditorPart) part;
-//			logger.info("part editor::" + editorPart.getEditorInput().getToolTipText()+"::actived" );
 			contextUtil.notifyEditorFileContextMayChange("/"+editorPart.getEditorInput().getToolTipText());
 		}	
 		return;
@@ -36,7 +35,7 @@ public class PartListener implements IPartListener{
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
-		logger.info("part::"+part.getTitle() + "::closed");
+		log(part.getTitle(),"closed");
 		return;
 	}
 
@@ -47,12 +46,17 @@ public class PartListener implements IPartListener{
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		logger.info("part::" + part.getTitle() + "::opened");
+		log(part.getTitle(),"opened");
 		if (part instanceof IEditorPart) {
 			IEditorPart editorPart = (IEditorPart) part;
 			AddDocumentListenerUtil.addDocumentListener(editorPart);
 		}
 		return;
+	}
+	
+	private void log(String partLabel,String state){
+		logger.info(":: action_type ::operation:: operation_type ::part:: state ::"+state+":: partLabel ::" + partLabel);
+
 	}
 
 }

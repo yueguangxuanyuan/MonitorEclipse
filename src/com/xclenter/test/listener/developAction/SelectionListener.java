@@ -1,6 +1,5 @@
 package com.xclenter.test.listener.developAction;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jface.text.IMarkSelection;
@@ -20,8 +19,7 @@ public class SelectionListener implements ISelectionListener {
 	private TextSelectionRecorder textSelectionRecorder;
 
 	public SelectionListener() {
-		textSelectionRecorder = TextSelectionRecorder
-				.getTextSelectionRecorder();
+		textSelectionRecorder = TextSelectionRecorder.getTextSelectionRecorder();
 	}
 
 	@Override
@@ -30,26 +28,20 @@ public class SelectionListener implements ISelectionListener {
 		if (!selection.isEmpty()) {
 			if (selection instanceof ITextSelection) {
 				ITextSelection testSelction = (ITextSelection) selection;
-//				log("text", part.getTitle(),
-//						"offset-" + testSelction.getOffset() + "text-"
-//								+ testSelction.getText() + "length-"
-//								+ testSelction.getLength());
-				
-				String filePath="";
-				if(part instanceof IEditorPart){
+
+				String filePath = "";
+				if (part instanceof IEditorPart) {
 					IEditorPart editorPart = (IEditorPart) part;
 					filePath = editorPart.getEditorInput().getToolTipText();
-				}else{
+				} else {
 					filePath = part.getTitle();
 				}
-				
-				textSelectionRecorder.recordTextSelection(filePath,
-						testSelction.getOffset(), testSelction.getLength(),
+
+				textSelectionRecorder.recordTextSelection(filePath, testSelction.getOffset(), testSelction.getLength(),
 						testSelction.getText());
 			} else if (selection instanceof IStructuredSelection) {
 				IStructuredSelection structuredSelction = (IStructuredSelection) selection;
-				log("structured", part.getTitle(),
-						structuredSelction.toString());
+				log("structured", part.getTitle(), structuredSelction.toString());
 			} else if (selection instanceof IMarkSelection) {
 				IMarkSelection testSelction = (IMarkSelection) selection;
 				log("mark", part.getTitle(), testSelction.toString());
@@ -58,9 +50,8 @@ public class SelectionListener implements ISelectionListener {
 	}
 
 	private void log(String type, String part, String selectionContent) {
-		logger.info("type::" + type + "::part::" + part + "::selctionContent::"
-				+ selectionContent);
+		logger.info(":: action_type ::edit:: operation_type ::select:: type ::" + type + ":: part ::" + part
+				+ ":: selctionContent ::" + selectionContent);
 	}
 
 }
-

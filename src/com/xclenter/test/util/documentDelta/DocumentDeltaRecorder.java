@@ -3,10 +3,9 @@ package com.xclenter.test.util.documentDelta;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 public class DocumentDeltaRecorder {
-	private static Logger logger = LogManager.getLogger("MessageLog");  
-	
+	private static Logger logger = LogManager.getLogger("MessageLog");
+
 	private final int INIT = 1;
 
 	private final int DELETE = 2;
@@ -36,6 +35,8 @@ public class DocumentDeltaRecorder {
 
 	private int lineOffset;
 
+	private int fileOffset;
+
 	private int offset;// 预期下一次变化发生的位置
 
 	private int deleteCharNum;
@@ -44,15 +45,16 @@ public class DocumentDeltaRecorder {
 
 	StringBuilder deltaStringBulider;
 
+	private boolean ifNeedRecordEmptyChar;
+
 	private DocumentDeltaRecorder() {
-		deltaStringBulider = new StringBuilder();
-		STATE = INIT;
+		String condition = System.getProperty("PassEmptyChar");
+
+		ifNeedRecordEmptyChar = !((condition != null) && condition.equals("true"));
 
 		projectName = "undefined";
 		fileFullPath = "undefined";
-		line = -1;
-		lineOffset = -1;
-		deleteCharNum = 0;
+		initState(INIT);
 	}
 
 	public static DocumentDeltaRecorder getDocumentDeltaRecorder() {
@@ -65,8 +67,8 @@ public class DocumentDeltaRecorder {
 	/*
 	 * 在文档发生改变的时候调用，感知变化
 	 */
-	public void notifyDocumentChange(int fline, int flineOffset, int fOffset,
-			int flength, String ftext) {
+	public void notifyDocumentChange(int fline, int ffileOffset, int flineOffset, int fOffset, int flength,
+			String ftext) {
 		// 区分删除和插入
 
 		if (flength > 0) {
@@ -96,9 +98,9 @@ public class DocumentDeltaRecorder {
 			offset = fOffset;
 			line = fline;
 			lineOffset = flineOffset;
-			
-			if(ftext != null && ftext.length() > 0){
-				notifyDocumentChange(fline, flineOffset, fOffset, 0, ftext);
+			fileOffset = ffileOffset;
+			if (ftext != null && ftext.length() > 0) {
+				notifyDocumentChange(fline, ffileOffset, flineOffset, fOffset, 0, ftext);
 			}
 		} else {
 			int result = judgeInsertContent(ftext);
@@ -113,6 +115,7 @@ public class DocumentDeltaRecorder {
 					offset = fOffset + ftext.length();
 					line = fline;
 					lineOffset = flineOffset;
+					fileOffset = ffileOffset;
 					deltaStringBulider.append(ftext);
 
 					if (needPass) {
@@ -128,6 +131,7 @@ public class DocumentDeltaRecorder {
 					offset = fOffset + ftext.length();
 					line = fline;
 					lineOffset = flineOffset;
+					fileOffset = ffileOffset;
 					deltaStringBulider.append(ftext);
 
 					if (needPass) {
@@ -144,11 +148,12 @@ public class DocumentDeltaRecorder {
 						initState(INSERT);
 						line = fline;
 						lineOffset = flineOffset;
+						fileOffset = ffileOffset;
 					}
 					offset = fOffset + ftext.length();
-					deltaStringBulider.append(ftext);	
+					deltaStringBulider.append(ftext);
 				}
-				
+
 				if (needPass) {
 					log();
 					initState(INIT);
@@ -171,11 +176,11 @@ public class DocumentDeltaRecorder {
 	 * 当保存文档的时候调用 记录改变
 	 */
 	public void notifyFlushLog(String effecedFilePath) {
-		if(effecedFilePath.equals(fileFullPath)){
+		if (effecedFilePath.equals(fileFullPath)) {
 			log();
-			initState(INIT);		
+			initState(INIT);
 		}
-	
+
 	}
 
 	/*
@@ -187,18 +192,17 @@ public class DocumentDeltaRecorder {
 			break;
 		case DELETE:
 			if (deleteCharNum > 0) {
-				String message = "Delete :: project :: " + projectName
-						+ " :: filePath :: " + fileFullPath + " :: location ::"
-						+ line + "," + lineOffset + " ::length:: "
-						+ deleteCharNum;
+				String message = ":: action_type ::edit:: operation_type ::delete:: project ::" + projectName
+						+ ":: filePath ::" + fileFullPath + ":: location ::" + line + "," + lineOffset
+						+ ":: fileOffset ::" + fileOffset + ":: length ::" + deleteCharNum;
 				logger.info(message);
 			}
 		case INSERT:
-			if(deltaStringBulider.length() > 0){
-				String message = "INSERT :: project :: " + projectName
-						+ " :: filePath :: " + fileFullPath + " :: location ::"
-						+ line + "," + lineOffset + " ::text:: "
-						+ deltaStringBulider.toString();
+			if (deltaStringBulider.length() > 0) {
+				String message = ":: action_type ::edit:: operation_type ::insert:: project ::" + projectName
+						+ ":: filePath ::" + fileFullPath + ":: location ::" + line + "," + lineOffset
+						+ ":: fileOffset ::" + fileOffset + ":: text_length ::" + deltaStringBulider.length()
+						+ ":: text ::" + deltaStringBulider.toString();
 				logger.info(message);
 			}
 		default:
@@ -217,6 +221,7 @@ public class DocumentDeltaRecorder {
 			STATE = state;
 			line = -1;
 			lineOffset = -1;
+			fileOffset = -1;
 			deleteCharNum = 0;
 			deltaStringBulider = new StringBuilder();
 			break;
@@ -231,11 +236,15 @@ public class DocumentDeltaRecorder {
 	private int judgeInsertContent(String ftext) {
 		int result = 0;
 
-		if (!ftext.matches("\\s*")) {
+		if (ifNeedRecordEmptyChar) {
 			result |= RECORD;
-		}
-		if (ftext.substring(ftext.length() - 1).matches("\\s|\n")) {
-			result |= PASS;
+		} else {
+			if (!ftext.matches("\\s*")) {
+				result |= RECORD;
+			}
+			if (ftext.substring(ftext.length() - 1).matches("\\s|\n")) {
+				result |= PASS;
+			}
 		}
 		return result;
 	}

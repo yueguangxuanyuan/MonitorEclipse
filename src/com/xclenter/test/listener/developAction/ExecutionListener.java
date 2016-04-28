@@ -18,19 +18,22 @@ public class ExecutionListener implements IExecutionListener{
 	@Override
 	public void postExecuteFailure(String arg0, ExecutionException arg1) {
 		// TODO Auto-generated method stub
-		logger.info("ExecutionListener-fail-"+arg0 );
+		log("fail-"+arg0 );
 	}
 
 	@Override
 	public void postExecuteSuccess(String arg0, Object arg1) {
 		// TODO Auto-generated method stub
-		logger.info("ExecutionListener-success-"+arg0 );
+		log("success-"+arg0 );
 	}
 
 	@Override
 	public void preExecute(String arg0, ExecutionEvent arg1) {
 		// TODO Auto-generated method stub
-		logger.info("ExecutionListener-preexecute-"+arg0 );
+		log("preexecute-"+arg0 );
 	}
-
+	
+	private void log (String message){
+		logger.info(":: action_type ::operation:: operation_type ::excution:: message ::"+message);
+	}
 }

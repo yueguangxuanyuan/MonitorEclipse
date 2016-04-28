@@ -10,13 +10,12 @@ public class WorkbenchListener implements IWorkbenchListener{
 	@Override
 	public boolean preShutdown(IWorkbench workbench, boolean forced) {
 		
-		logger.info("Workbench preshutdown");
 		return true;
 	}
 
 	@Override
 	public void postShutdown(IWorkbench workbench) {
-		logger.info("Workbench postshutdown");
+
 	}
 
 }

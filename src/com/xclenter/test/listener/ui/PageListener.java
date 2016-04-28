@@ -11,23 +11,22 @@ public class PageListener implements IPageListener{
 	
 	@Override
 	public void pageActivated(IWorkbenchPage page) {
-		
-		logger.info("page::"+page.getLabel() + "::active");
-		
+		log(page.getLabel(),"active");
 	}
 
 	@Override
 	public void pageClosed(IWorkbenchPage page) {
-		
-		logger.info("page::"+page.getLabel() + "::close");
-
+		log(page.getLabel(),"close");
 	}
 
 	@Override
 	public void pageOpened(IWorkbenchPage page) {
-		
-		logger.info("page::"+page.getLabel() + "::opened");
-		
+		log(page.getLabel(),"opened");
+	}
+	
+	private void log(String pageLabel,String state){
+		logger.info(":: action_type ::operation:: operation_type ::page:: state ::"+state+":: pageLabel ::" + pageLabel);
+
 	}
 
 }

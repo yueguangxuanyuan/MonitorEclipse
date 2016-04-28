@@ -31,7 +31,7 @@ public class DocumentListener implements IDocumentListener{
 			int lineOffset = document.getLineOffset(line);
 			line ++;
 			lineOffset = event.fOffset-lineOffset ;
-			documentDeltaRecorder.notifyDocumentChange(line, lineOffset, offset, event.fLength, event.fText);
+			documentDeltaRecorder.notifyDocumentChange(line,event.fOffset, lineOffset, offset, event.fLength, event.fText);
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

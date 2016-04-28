@@ -44,8 +44,7 @@ public class TextSelectionRecorder {
 
 	ScheduledExecutorService service;
 
-	public void recordTextSelection(String filePath, int offset, int length,
-			String text) {
+	public void recordTextSelection(String filePath, int offset, int length, String text) {
 		try {
 			lock.acquire();
 			switch (STATE) {
@@ -61,8 +60,7 @@ public class TextSelectionRecorder {
 				}
 
 				if (length > 0) {
-					boolean isContinousSelect = (offset == pOffset)
-							|| (pOffset + pLength == offset + length);
+					boolean isContinousSelect = (offset == pOffset) || (pOffset + pLength == offset + length);
 					if (!isContinousSelect) {
 						log();
 					}
@@ -83,11 +81,10 @@ public class TextSelectionRecorder {
 
 	}
 
-
 	private void log() {
 		if (pLength != 0) {
-			logger.info("Select-file-" + pFilePath + "-offset-" + pOffset + "-text-"
-					+ pText + "-length-" + pLength);
+			logger.info(":: action_type ::edit:: operation_type ::select:: type ::text:: filePath ::" + pFilePath
+					+ ":: offset ::" + pOffset + ":: length ::" + pLength + ":: text ::" + pText);
 		}
 	}
 
@@ -99,8 +96,7 @@ public class TextSelectionRecorder {
 		STATE = INIT;
 	}
 
-	private void updateRecordingContext(String filePath, int offset,
-			int length, String text) {
+	private void updateRecordingContext(String filePath, int offset, int length, String text) {
 		if (service != null) {
 			service.shutdownNow();
 			try {

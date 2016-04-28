@@ -20,7 +20,7 @@ public class UIAddListenerUtil {
 	public static void addWindowListener(IWorkbenchWindow workbenchWindow){
 		//获取默认的perspective   ！待定 最后不一定有用
     	IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-    	logger.info("worbench default perspective::"+workbenchPage.getPerspective().getLabel());
+    	logger.info(":: action_type ::operation:: operation_type ::perspertive:: state ::actived:: perspectiveLabel ::"+workbenchPage.getPerspective().getLabel());
     	
     	//添加page 和perspective监听器
     	workbenchWindow.addPerspectiveListener(new PerspectitveListener());

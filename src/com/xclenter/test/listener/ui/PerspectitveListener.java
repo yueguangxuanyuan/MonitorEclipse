@@ -12,13 +12,16 @@ public class PerspectitveListener implements IPerspectiveListener{
 	@Override
 	public void perspectiveActivated(IWorkbenchPage page,
 			IPerspectiveDescriptor perspective) {
-		logger.info("perspective::"+perspective.getId() +"::active");
+		log(perspective.getId(),"actived");
 	}
 
 	@Override
 	public void perspectiveChanged(IWorkbenchPage page,
 			IPerspectiveDescriptor perspective, String changeId) {
-		logger.info("perspective::"+ perspective.getId() +"::deactive");
+		log(perspective.getId(),"deactived");
 	}
-
+	
+	private void log(String perspectiveLabel,String state){
+		logger.info(":: action_type ::operation:: operation_type ::perspertive:: state ::"+state+":: perspectiveLabel ::" + perspectiveLabel);
+	}
 }

@@ -26,7 +26,6 @@ public class WindowListener implements IWindowListener{
 
 	@Override
 	public void windowOpened(IWorkbenchWindow window) {
-		logger.info("window::"+window.getActivePage().getLabel() +"::opened");
 		UIAddListenerUtil.addWindowListener(window);
 	}
 
