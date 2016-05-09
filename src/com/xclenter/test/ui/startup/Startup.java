@@ -42,7 +42,7 @@ public class Startup implements IStartup{
         workspace.addResourceChangeListener(new MyResourceChangeListener());
         
 //        DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(new BreakPointListener());
-        workbench.getService(ICommandService.class).addExecutionListener(new ExecutionListener());
+        ((ICommandService) workbench.getService(ICommandService.class)).addExecutionListener(new ExecutionListener());
         DebugPlugin.getDefault().addDebugEventListener(new DebugEventSetListener());
 	}
 

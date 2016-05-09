@@ -1,10 +1,13 @@
 package com.xclenter.test.util.context;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.xclenter.test.util.documentDelta.DocumentDeltaRecorder;
 import com.xclenter.test.util.selectDelta.TextSelectionRecorder;
 
 //上下文管理模块 用来统一管理上下文
-public class ContextUtil {
+public class ContextUtil implements IGetContext{
 	private String projectName;
 	private String fileName;
 	private String filePath;
@@ -67,5 +70,16 @@ public class ContextUtil {
 			documentDeltaRecorder
 					.notifyContextChange(projectName, fileFullPath);
 		}
+	}
+
+	@Override
+	public Map getContext() {
+		// TODO Auto-generated method stub
+		Map context = new HashMap();
+		context.put("projectName", projectName);
+		context.put("filePath", filePath);
+		context.put("fileName", fileName);
+		context.put("fileFullPath", fileFullPath);
+		return context;
 	}
 }

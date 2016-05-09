@@ -1,5 +1,7 @@
 package com.xclenter.test.util.selectDelta;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Semaphore;
@@ -8,7 +10,9 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TextSelectionRecorder {
+import com.xclenter.test.util.context.IGetContext;
+
+public class TextSelectionRecorder implements IGetContext {
 	private static Logger logger = LogManager.getLogger("MessageLog");
 
 	private static TextSelectionRecorder textSelectionRecorder;
@@ -44,7 +48,8 @@ public class TextSelectionRecorder {
 
 	ScheduledExecutorService service;
 
-	public void recordTextSelection(String filePath, int offset, int length, String text) {
+	public void recordTextSelection(String filePath, int offset, int length,
+			String text) {
 		try {
 			lock.acquire();
 			switch (STATE) {
@@ -60,7 +65,8 @@ public class TextSelectionRecorder {
 				}
 
 				if (length > 0) {
-					boolean isContinousSelect = (offset == pOffset) || (pOffset + pLength == offset + length);
+					boolean isContinousSelect = (offset == pOffset)
+							|| (pOffset + pLength == offset + length);
 					if (!isContinousSelect) {
 						log();
 					}
@@ -83,8 +89,12 @@ public class TextSelectionRecorder {
 
 	private void log() {
 		if (pLength != 0) {
-			logger.info(":: action_type ::edit:: operation_type ::select:: type ::text:: filePath ::" + pFilePath
-					+ ":: offset ::" + pOffset + ":: length ::" + pLength + ":: text ::" + pText);
+			logger.info(":: action_type ::edit:: operation_type ::select:: type ::text:: filePath ::"
+					+ pFilePath
+					+ ":: offset ::"
+					+ pOffset
+					+ ":: length ::"
+					+ pLength + ":: text ::" + pText);
 		}
 	}
 
@@ -96,7 +106,8 @@ public class TextSelectionRecorder {
 		STATE = INIT;
 	}
 
-	private void updateRecordingContext(String filePath, int offset, int length, String text) {
+	private void updateRecordingContext(String filePath, int offset,
+			int length, String text) {
 		if (service != null) {
 			service.shutdownNow();
 			try {
@@ -127,5 +138,22 @@ public class TextSelectionRecorder {
 				}
 			}
 		}, 2, TimeUnit.SECONDS);
+	}
+
+	@Override
+	public Map getContext() {
+		// TODO Auto-generated method stub
+		Map context = new HashMap();
+		try {
+			lock.acquire();
+			context.put("filePath", pFilePath);
+			context.put("offset", pOffset);
+			context.put("text", pText);
+			lock.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return context;
 	}
 }
