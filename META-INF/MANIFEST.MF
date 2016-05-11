@@ -10,7 +10,6 @@ Bundle-Activator: com.xclenter.test.Activator
 Bundle-Vendor: XCLENTER
 Export-Package: com.xclenter.test;uses:="org.eclipse.ui.plugin,org.osgi.framework",
  com.xclenter.test.listener.developAction;uses:="org.eclipse.jface.text",
- com.xclenter.test.listener.resource;uses:="org.eclipse.core.resources",
  com.xclenter.test.listener.ui;uses:="org.eclipse.ui,org.eclipse.jface.viewers",
  com.xclenter.test.ui.startup;uses:="org.eclipse.ui",
  com.xclenter.test.util.addlistener.developAction;uses:="org.eclipse.ui",
@@ -24,7 +23,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.debug.core;bundle-version="3.8.0",
- org.eclipse.cdt.core;bundle-version="5.6.0"
+ org.eclipse.cdt.core;bundle-version="5.6.0",
+ org.eclipse.ui.console;bundle-version="3.5.200"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.jface.text,

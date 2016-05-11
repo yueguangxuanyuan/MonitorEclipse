@@ -53,28 +53,29 @@ public class ExecutionListener implements IExecutionListener {
 	public void postExecuteSuccess(String arg0, Object arg1) {
 		// TODO Auto-generated method stub
 
-		/*
-		 * 记录在Eclipse内部的复制行为 目前记录两种 1 文件内字符串内容的复制 结合选择上下文 记录复制的上下文
-		 * 
-		 * 2工程文件夹的复制，之后辅助利用 这里记录的是文件的绝对路径 同时 空格之后包括了文件的类型 folder file 或者是 unknow
-		 * 
-		 * Eclipse内部的剪切行文 处理同复制行文 区别：剪切在剪切文件或者文件夹的时候存在问题
-		 */
 		if (arg0.equals("org.eclipse.ui.edit.copy")
 				|| arg0.equals("org.eclipse.ui.edit.cut")) {
+			/*
+			 * 记录在Eclipse内部的复制行为 目前记录两种 1 文件内字符串内容的复制 结合选择上下文 记录复制的上下文
+			 * 
+			 * 2工程文件夹的复制，之后辅助利用 这里记录的是文件的绝对路径 同时 空格之后包括了文件的类型 folder file 或者是
+			 * unknow
+			 * 
+			 * Eclipse内部的剪切行文 处理同复制行文 区别：剪切在剪切文件或者文件夹的时候存在问题
+			 */
 			String message = getCopyPasteMessage(arg0, true);
 			log(message);
 		} else if (arg0.equals("org.eclipse.ui.edit.paste")) {
 			log(pasteMessage);
 		} else {
-			log("success-" + arg0);
+			log("success-" + arg0 + "-Object-" + arg1);
 		}
 	}
 
 	@Override
 	public void preExecute(String arg0, ExecutionEvent arg1) {
 		// TODO Auto-generated method stub
-		log("preexecute-" + arg0);
+		log("preexecute-" + arg0 + "-executionEvent-" + arg1);
 		if (arg0.equals("org.eclipse.ui.edit.copy")
 				|| arg0.equals("org.eclipse.ui.edit.cut")) {
 			selectContext = iGetContext.getContext();
@@ -110,8 +111,10 @@ public class ExecutionListener implements IExecutionListener {
 						message.append(",");
 					}
 					message.append("]");
-					if(!isCopyCut){
-						message.append(":targetPath:" + iGetPasteContext.getContext().get("targetPath"));
+					if (!isCopyCut) {
+						message.append(":targetPath:"
+								+ iGetPasteContext.getContext().get(
+										"targetPath"));
 					}
 					return message.toString();
 				} catch (UnsupportedFlavorException e) {

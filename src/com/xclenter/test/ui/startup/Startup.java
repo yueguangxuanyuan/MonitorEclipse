@@ -9,10 +9,12 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.console.ConsolePlugin;
 
 import com.xclenter.test.listener.debugAction.DebugEventSetListener;
+import com.xclenter.test.listener.developAction.ConsoleListener;
 import com.xclenter.test.listener.developAction.ExecutionListener;
-import com.xclenter.test.listener.resource.MyResourceChangeListener;
+import com.xclenter.test.listener.developAction.MyResourceChangeListener;
 import com.xclenter.test.listener.ui.WindowListener;
 import com.xclenter.test.util.addlistener.developAction.AddDocumentListenerUtil;
 import com.xclenter.test.util.addlistener.ui.UIAddListenerUtil;
@@ -38,12 +40,15 @@ public class Startup implements IStartup{
         	}
         }
         
+        
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         workspace.addResourceChangeListener(new MyResourceChangeListener());
         
 //        DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(new BreakPointListener());
         ((ICommandService) workbench.getService(ICommandService.class)).addExecutionListener(new ExecutionListener());
         DebugPlugin.getDefault().addDebugEventListener(new DebugEventSetListener());
+        
+        ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(new ConsoleListener());
 	}
 
 }
