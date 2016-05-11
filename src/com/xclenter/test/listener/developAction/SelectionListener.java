@@ -17,8 +17,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.xclenter.test.util.selectDelta.FileSelectionRecorder;
-import com.xclenter.test.util.selectDelta.TextSelectionRecorder;
+import com.xclenter.test.log.selectDelta.FileSelectionRecorder;
+import com.xclenter.test.log.selectDelta.TextSelectionRecorder;
 
 public class SelectionListener implements ISelectionListener {
 

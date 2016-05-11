@@ -1,4 +1,4 @@
-package com.xclenter.test.util.selectDelta;
+package com.xclenter.test.log.selectDelta;
 
 import java.util.HashMap;
 import java.util.Map;

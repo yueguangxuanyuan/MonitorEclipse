@@ -1,4 +1,4 @@
-package com.xclenter.test.util.documentDelta;
+package com.xclenter.test.log.documentDelta;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

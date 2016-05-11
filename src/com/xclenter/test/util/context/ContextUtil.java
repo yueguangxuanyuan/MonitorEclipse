@@ -3,8 +3,8 @@ package com.xclenter.test.util.context;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.xclenter.test.util.documentDelta.DocumentDeltaRecorder;
-import com.xclenter.test.util.selectDelta.TextSelectionRecorder;
+import com.xclenter.test.log.documentDelta.DocumentDeltaRecorder;
+import com.xclenter.test.log.selectDelta.TextSelectionRecorder;
 
 //上下文管理模块 用来统一管理上下文
 public class ContextUtil implements IGetContext{

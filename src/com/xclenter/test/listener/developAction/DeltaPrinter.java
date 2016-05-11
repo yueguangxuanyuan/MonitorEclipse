@@ -6,7 +6,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 
-import com.xclenter.test.util.documentDelta.DocumentDeltaRecorder;
+import com.xclenter.test.log.documentDelta.DocumentDeltaRecorder;
 import com.xclenter.test.util.resource.ResourceUtil;
 
 public class DeltaPrinter implements IResourceDeltaVisitor {

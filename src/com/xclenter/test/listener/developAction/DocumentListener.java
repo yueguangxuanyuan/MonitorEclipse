@@ -5,11 +5,7 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 
-/*
- *  如果修改没有保存的话  这样记录到的是无效的修改
- *  这个方法协助记录到的结果需要通过与MyResourceChange监听到的结果交互之后 得到最终的有效操作序列
- */
-import com.xclenter.test.util.documentDelta.DocumentDeltaRecorder;
+import com.xclenter.test.log.documentDelta.DocumentDeltaRecorder;
 public class DocumentListener implements IDocumentListener{
 	private DocumentDeltaRecorder documentDeltaRecorder;
 	

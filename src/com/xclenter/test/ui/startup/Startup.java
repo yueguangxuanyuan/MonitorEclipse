@@ -12,9 +12,9 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.console.ConsolePlugin;
 
 import com.xclenter.test.listener.debugAction.DebugEventSetListener;
-import com.xclenter.test.listener.developAction.ConsoleListener;
 import com.xclenter.test.listener.developAction.ExecutionListener;
 import com.xclenter.test.listener.developAction.MyResourceChangeListener;
+import com.xclenter.test.listener.developAction.build.ConsoleListener;
 import com.xclenter.test.listener.ui.WindowListener;
 import com.xclenter.test.util.addlistener.developAction.AddDocumentListenerUtil;
 import com.xclenter.test.util.addlistener.ui.UIAddListenerUtil;
