@@ -16,8 +16,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 
 import com.xclenter.test.log.selectDelta.FileSelectionRecorder;
 import com.xclenter.test.log.selectDelta.TextSelectionRecorder;
