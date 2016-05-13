@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 
 import com.xclenter.test.util.resource.ResourceUtil;
 
-public class MyResourceChangeListener implements IResourceChangeListener {
+public class ResourceChangeListener implements IResourceChangeListener {
 	private static Logger logger = LogManager.getLogger("MessageLog");
 
 	@Override

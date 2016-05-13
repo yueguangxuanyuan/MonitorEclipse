@@ -13,11 +13,12 @@ import org.eclipse.ui.console.ConsolePlugin;
 
 import com.xclenter.test.listener.debugAction.DebugEventSetListener;
 import com.xclenter.test.listener.developAction.ExecutionListener;
-import com.xclenter.test.listener.developAction.MyResourceChangeListener;
+import com.xclenter.test.listener.developAction.ResourceChangeListener;
 import com.xclenter.test.listener.developAction.build.ConsoleListener;
 import com.xclenter.test.listener.ui.WindowListener;
 import com.xclenter.test.util.addlistener.developAction.AddDocumentListenerUtil;
 import com.xclenter.test.util.addlistener.ui.UIAddListenerUtil;
+import com.xclenter.test.util.saveFile.FileUtil;
 
 public class Startup implements IStartup{
 
@@ -37,15 +38,25 @@ public class Startup implements IStartup{
         	IEditorPart editorpart = workbenchWindow.getActivePage().getActiveEditor();
         	if(editorpart != null){        		
         		AddDocumentListenerUtil.addDocumentListener(editorpart);
-        	}
+        	}        	
         }
         
-        
+        /*
+         * 添加资源监听器
+         */
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        workspace.addResourceChangeListener(new MyResourceChangeListener());
+        workspace.addResourceChangeListener(new ResourceChangeListener());
         
-//        DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(new BreakPointListener());
+        FileUtil.initSaveContext();
+        
+        /*
+        * 监听可捕获的命令
+        */
+       
         ((ICommandService) workbench.getService(ICommandService.class)).addExecutionListener(new ExecutionListener());
+        /*
+         * 监听 run和debug
+         */
         DebugPlugin.getDefault().addDebugEventListener(new DebugEventSetListener());
         
         ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(new ConsoleListener());

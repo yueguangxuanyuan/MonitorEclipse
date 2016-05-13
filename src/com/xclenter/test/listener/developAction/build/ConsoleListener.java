@@ -24,10 +24,10 @@ public class ConsoleListener implements IConsoleListener {
 	@Override
 	public void consolesAdded(IConsole[] arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("console added[");
+//		System.out.println("console added[");
 		for (IConsole console : arg0) {
-			System.out
-					.println(console.getName() + console.getClass().getName());
+//			System.out
+//					.println(console.getName() + console.getClass().getName());
 			/*
 			 * normal运行时的输出窗口
 			 */
@@ -63,7 +63,7 @@ public class ConsoleListener implements IConsoleListener {
 								buildConsoleManager));
 			}
 		}
-		System.out.println("]");
+		// System.out.println("]");
 	}
 
 	@Override

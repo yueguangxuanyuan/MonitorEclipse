@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 
 import com.xclenter.test.log.documentDelta.DocumentDeltaRecorder;
 import com.xclenter.test.util.resource.ResourceUtil;
+import com.xclenter.test.util.saveFile.FileUtil;
 
 public class DeltaPrinter implements IResourceDeltaVisitor {
 	
@@ -17,7 +18,9 @@ public class DeltaPrinter implements IResourceDeltaVisitor {
 	public DeltaPrinter(){
 		documentDeltaRecorder = DocumentDeltaRecorder.getDocumentDeltaRecorder();
 	}
-	
+	private void log(String type,String fileFullPath,String resourceType,String fileRelatePath){
+		logger.info(":: action_type ::edit:: operation_type ::resource:: type ::"+type+":: resource_path ::" + fileFullPath+":: resourceType ::"+resourceType+":: fileRelatePath ::" + fileRelatePath);
+	}
 	private void log(String type,String fileFullPath,String resourceType){
 		logger.info(":: action_type ::edit:: operation_type ::resource:: type ::"+type+":: resource_path ::" + fileFullPath+":: resourceType ::"+resourceType);
 	}
@@ -26,7 +29,17 @@ public class DeltaPrinter implements IResourceDeltaVisitor {
        boolean doVisitChildren = true;
        switch (delta.getKind()) {
           case IResourceDelta.ADDED:
-             log("added",res.getFullPath().toString(),ResourceUtil.getResourceType(res));
+        	  String resouceType = ResourceUtil.getResourceType(res);
+        	  /*
+        	   * 如果是文件 就需要保存文件的内容 
+        	   */
+        	  if(resouceType.equals("File")){
+        		  String fileRelatePath = FileUtil.saveMiddleFile(res.getFullPath().toString(),res.getLocation().toOSString());;
+        		  log("added",res.getFullPath().toString(), resouceType,fileRelatePath);
+        	  }else{
+        		  log("added",res.getFullPath().toString(), resouceType);
+        	  }
+        	  
              break;
           case IResourceDelta.REMOVED:
              log("removed",res.getFullPath().toString(),ResourceUtil.getResourceType(res));
