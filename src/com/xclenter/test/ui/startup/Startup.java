@@ -1,5 +1,6 @@
 package com.xclenter.test.ui.startup;
 
+import org.apache.logging.log4j.ThreadContext;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
@@ -24,6 +25,7 @@ public class Startup implements IStartup{
 
 	@Override
 	public void earlyStartup() {
+		System.setProperty("openlog4j", "true");
 		// TODO Auto-generated method stub
 		//ªÒ»°workbench
 		IWorkbench workbench = PlatformUI.getWorkbench();
