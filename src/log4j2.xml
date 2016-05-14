@@ -2,11 +2,6 @@
 <Configuration status="info" packages="com.xclenter.test.log4j.filter">
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
-			<filters>
-				<!-- level range filter. we will create this filter in the next step -->
-				<SystemPropertyFilter property="openlog4j" value="true" onMatch="ACCEPT"
-					onMismatch="DENY" />
-			</filters>
 			<PatternLayout
 				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n" />
 		</Console>
@@ -23,6 +18,11 @@
 
 	<Loggers>
 		<logger name="MessageLog" level="trace" additivity="false">
+		    <filters>
+				<!-- level range filter. we will create this filter in the next step -->
+				<SystemPropertyFilter property="openlog4j" value="true" onMatch="ACCEPT"
+					onMismatch="DENY" />
+			</filters>
 			<AppenderRef ref="RollingFile" />
 			<AppenderRef ref="Console" />
 		</logger>

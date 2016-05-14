@@ -8,7 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 
-public class FileUtil {
+public class SaveFileUtil {
 
 	private static String projectSaveRootPath = "com.xclenter.monitor"
 			+ File.separator + "project";

@@ -8,7 +8,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 
 import com.xclenter.test.log.documentDelta.DocumentDeltaRecorder;
 import com.xclenter.test.util.resource.ResourceUtil;
-import com.xclenter.test.util.saveFile.FileUtil;
+import com.xclenter.test.util.saveFile.SaveFileUtil;
 
 public class DeltaPrinter implements IResourceDeltaVisitor {
 	
@@ -34,7 +34,7 @@ public class DeltaPrinter implements IResourceDeltaVisitor {
         	   * 如果是文件 就需要保存文件的内容 
         	   */
         	  if(resouceType.equals("File")){
-        		  String fileRelatePath = FileUtil.saveMiddleFile(res.getFullPath().toString(),res.getLocation().toOSString());;
+        		  String fileRelatePath = SaveFileUtil.saveMiddleFile(res.getFullPath().toString(),res.getLocation().toOSString());;
         		  log("added",res.getFullPath().toString(), resouceType,fileRelatePath);
         	  }else{
         		  log("added",res.getFullPath().toString(), resouceType);

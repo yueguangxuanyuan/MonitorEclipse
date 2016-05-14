@@ -19,13 +19,13 @@ import com.xclenter.test.listener.developAction.build.ConsoleListener;
 import com.xclenter.test.listener.ui.WindowListener;
 import com.xclenter.test.util.addlistener.developAction.AddDocumentListenerUtil;
 import com.xclenter.test.util.addlistener.ui.UIAddListenerUtil;
-import com.xclenter.test.util.saveFile.FileUtil;
+import com.xclenter.test.util.saveFile.SaveFileUtil;
 
 public class Startup implements IStartup{
 
 	@Override
 	public void earlyStartup() {
-		System.setProperty("openlog4j", "true");
+		System.setProperty("openlog4j", "false");
 		// TODO Auto-generated method stub
 		//获取workbench
 		IWorkbench workbench = PlatformUI.getWorkbench();
@@ -49,7 +49,7 @@ public class Startup implements IStartup{
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         workspace.addResourceChangeListener(new ResourceChangeListener());
         
-        FileUtil.initSaveContext();
+        SaveFileUtil.initSaveContext();
         
         /*
         * 监听可捕获的命令
