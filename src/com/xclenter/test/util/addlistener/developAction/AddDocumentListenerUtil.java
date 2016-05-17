@@ -24,8 +24,10 @@ public class AddDocumentListenerUtil {
  */
 	public static void addDocumentListener(IEditorPart editorPart){
 		contextUtil.notifyEditorFileContextMayChange("/"+editorPart.getEditorInput().getToolTipText());
-		ITextEditor ite = (ITextEditor)editorPart;
-		IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
-		doc.addDocumentListener(new DocumentListener());
+		if(editorPart instanceof ITextEditor){
+			ITextEditor ite = (ITextEditor)editorPart;
+			IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
+			doc.addDocumentListener(new DocumentListener());
+		}
 	}
 }

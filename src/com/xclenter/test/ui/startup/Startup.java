@@ -1,6 +1,5 @@
 package com.xclenter.test.ui.startup;
 
-import org.apache.logging.log4j.ThreadContext;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
