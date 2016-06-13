@@ -87,7 +87,7 @@
           <action
                class="com.xclenter.test.ui.actions.StopLogAction"
                icon="icons/sample.gif"
-               id="xclenter.actions.controlLog.StoptLogAction"
+               id="xclenter.actions.controlLog.StopLogAction"
                label="Stop Log(test"
                menubarPath="xclenter/controlLog"
                toolbarPath="controlLog"

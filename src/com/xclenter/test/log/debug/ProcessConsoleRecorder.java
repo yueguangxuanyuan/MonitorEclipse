@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jface.text.IDocument;
 
-import com.xclenter.test.log.build.BuildRecorder;
 
 public class ProcessConsoleRecorder {
 	private static Logger logger = LogManager.getLogger("MessageLog");
@@ -137,7 +136,7 @@ public class ProcessConsoleRecorder {
 		if(indexOfSplit > 0 && indexOfSplit < projectId.length()){
 			String projectName = projectId.substring(0,indexOfSplit);
 			String processId = projectId.substring(indexOfSplit+1);
-			logger.info(":: action_type ::output:: runType ::normal:: project ::"+projectName+":: processId ::"+processId+":: message ::\n"+message);
+			logger.info(":: action_type ::output:: runType ::normal:: project ::"+projectName+":: processId ::"+processId+":: length ::"+message.length()+":: message ::"+message);
 		}
 	}
 }

@@ -109,7 +109,7 @@ public class BuildRecorder {
 	}
 	
 	private void log(String projectName,String message) {
-		logger.info(":: action_type ::build:: project ::"+projectName+":: message ::\n"+message);
+		logger.info(":: action_type ::build:: project ::"+projectName+":: length ::"+message.length()+":: message ::"+message);
 	}
 
 }

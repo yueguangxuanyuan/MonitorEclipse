@@ -61,6 +61,7 @@ public class Startup implements IStartup{
         DebugPlugin.getDefault().addDebugEventListener(new DebugEventSetListener());
         
         ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(new ConsoleListener());
+    
 	}
 
 }

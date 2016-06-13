@@ -36,7 +36,8 @@ public class SaveFileUtil {
 		if (file.exists() && file.isFile()) {
 			fileRelatePath = workspacePath.substring(1);
 			String fileHash = HashUtil.getHash(OSPath, "MD5");
-
+			fileHash += "-"+HashUtil.getHash(OSPath, "SHA1");
+					
 			fileRelatePath += "-" + fileHash;
 
 			fileRelatePath += "-" + System.currentTimeMillis();

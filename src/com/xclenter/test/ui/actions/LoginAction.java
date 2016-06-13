@@ -39,7 +39,6 @@ public class LoginAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		action.setEnabled(false);
 	}
 
 	/**

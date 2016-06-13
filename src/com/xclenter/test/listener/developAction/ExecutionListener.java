@@ -29,7 +29,7 @@ public class ExecutionListener implements IExecutionListener {
 	private IGetContext iGetPasteContext;
 	private Map selectContext;
 	private String pasteMessage;
-
+	
 	public ExecutionListener() {
 		iGetContext = TextSelectionRecorder.getTextSelectionRecorder();
 		iGetPasteContext = FileSelectionRecorder.getFileSelectionRecorder();
@@ -54,14 +54,6 @@ public class ExecutionListener implements IExecutionListener {
 		// TODO Auto-generated method stub
 
 		if (arg0.equals("org.eclipse.ui.edit.copy") || arg0.equals("org.eclipse.ui.edit.cut")) {
-			/*
-			 * 记录在Eclipse内部的复制行为 目前记录两种 1 文件内字符串内容的复制 结合选择上下文 记录复制的上下文
-			 * 
-			 * 2工程文件夹的复制，之后辅助利用 这里记录的是文件的绝对路径 同时 空格之后包括了文件的类型 folder file 或者是
-			 * unknow
-			 * 
-			 * Eclipse内部的剪切行文 处理同复制行文 区别：剪切在剪切文件或者文件夹的时候存在问题
-			 */
 			String message = getCopyPasteMessage(arg0, true);
 			log(message);
 		} else if (arg0.equals("org.eclipse.ui.edit.paste")) {
@@ -73,17 +65,7 @@ public class ExecutionListener implements IExecutionListener {
 
 	@Override
 	public void preExecute(String arg0, ExecutionEvent arg1) {
-		// TODO Auto-generated method stub
-		log("preexecute-" + arg0);
-/*
- *这里可以分析出 executionEvent  通过 实现了IEclipseContext接口的实体 携带了上下文信息 
- *内部的上下文 需要进一步详细分析
- */
-//		if (arg1.getApplicationContext() instanceof IEvaluationContext) {
-//			IEvaluationContext evaluationContext = (IEvaluationContext) arg1.getApplicationContext();
-//			IEclipseContext context = (IEclipseContext) evaluationContext.getVariable(IEclipseContext.class.getName());
-//			log(evaluationContext.getVariable(IEclipseContext.class.getName()).getClass().getName());
-//		}
+//		log("preexecute-" + arg0);
 
 		if (arg0.equals("org.eclipse.ui.edit.copy") || arg0.equals("org.eclipse.ui.edit.cut")) {
 			selectContext = iGetContext.getContext();
@@ -160,7 +142,7 @@ public class ExecutionListener implements IExecutionListener {
 						context = "@filePath:" + globalContext.get("fileFullPath") + "@offset:-1";
 					}
 
-					message.append(":type:text:context:" + context + ":content:" + copyContent);
+					message.append(":type:text:context:" + context + ":length:"+copyContent.length()+":content:" + copyContent);
 					return message.toString();
 				} catch (UnsupportedFlavorException e) {
 					// TODO Auto-generated catch block

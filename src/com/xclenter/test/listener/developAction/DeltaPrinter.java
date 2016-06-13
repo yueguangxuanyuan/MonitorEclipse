@@ -2,6 +2,8 @@ package com.xclenter.test.listener.developAction;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
@@ -45,17 +47,26 @@ public class DeltaPrinter implements IResourceDeltaVisitor {
              log("removed",res.getFullPath().toString(),ResourceUtil.getResourceType(res));
              break;
           case IResourceDelta.CHANGED:
-        	 switch(delta.getFlags()){
-        	 case IResourceDelta.CONTENT:
-        		 
-        		 break;
-             default:
-        	 }
         	 switch(res.getType()){
         	 case IResource.FILE:
-        		 documentDeltaRecorder.notifyFlushLog(res.getFullPath().toString());;
-        		  log("changed",res.getFullPath().toString(),ResourceUtil.getResourceType(res));
-                 break;
+        		 if(delta.getFlags() == IResourceDelta.CONTENT){
+        			 /*
+            		  * 当出现文件内容修改的时候 将该文件的变化刷入硬盘中
+            		  */
+            		 documentDeltaRecorder.notifyFlushLog(res.getFullPath().toString());;
+//            		 IFile file = (IFile) res;
+//            		 IFileState[] states =  null;
+//            		 try{
+//            			 states = file.getHistory(null);
+//            		 }catch (Throwable _e) {
+//            		 }
+//            		 if(states != null && states.length > 0){
+//            			 System.out.println(states[0].getModificationTime() + "-" + System.currentTimeMillis());
+//            		 }
+//            		 
+            		 log("changed",res.getFullPath().toString(),ResourceUtil.getResourceType(res));
+        		 }
+        		 break;
              default:
         	 }
              break;

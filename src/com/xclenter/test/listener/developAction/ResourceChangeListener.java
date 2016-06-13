@@ -12,7 +12,7 @@ import com.xclenter.test.util.resource.ResourceUtil;
 
 public class ResourceChangeListener implements IResourceChangeListener {
 	private static Logger logger = LogManager.getLogger("MessageLog");
-
+	
 	@Override
 	public void resourceChanged(IResourceChangeEvent resourceChangeEvent) {
 		IResource resource = resourceChangeEvent.getResource();

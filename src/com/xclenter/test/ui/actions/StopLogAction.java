@@ -6,6 +6,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.xclenter.test.util.action.ActionUtil;
+
 /**
  * Our sample action implements workbench action delegate.
  * The action proxy will be created by the workbench and
@@ -16,10 +18,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
  */
 public class StopLogAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
+	boolean isInit;
 	/**
 	 * The constructor.
 	 */
 	public StopLogAction() {
+		isInit = true;
 	}
 
 	/**
@@ -30,6 +34,10 @@ public class StopLogAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void run(IAction action) {
 		System.setProperty("openlog4j","false");
+		action.setEnabled(false);
+		
+		ActionUtil.enableAction("Xclenter", "xclenter.actions.controlLog.StartLogAction", true);
+		
 		MessageDialog.openInformation(
 			window.getShell(),
 			"MonitorEclipse",
@@ -44,11 +52,9 @@ public class StopLogAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		String ifLog4jOpened = System.getProperty("openlog4j");
-		if(ifLog4jOpened != null &&ifLog4jOpened.equals("true")){
-			action.setEnabled(true);
-		}else{
+		if(isInit){
 			action.setEnabled(false);
+			isInit = false;
 		}
 	}
 
