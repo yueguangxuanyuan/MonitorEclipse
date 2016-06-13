@@ -55,7 +55,7 @@ public class DebugEventSetListener implements IDebugEventSetListener {
 				eventType = debugEvent.getKind() == DebugEvent.CREATE ? "start"
 						: "end";
 				Object source = debugEvent.getSource();
-				System.out.println(source.getClass());
+//				System.out.println(source.getClass());
 				if (source instanceof IProcess) {
 					IProcess process = (IProcess) source;
 					processId = process.toString();
@@ -80,14 +80,21 @@ public class DebugEventSetListener implements IDebugEventSetListener {
 									fileSperator.length(), splitIndex);
 						}
 					}
-
 					/*
-					 * 如果运行结束了 通知 console 将程序输出 记录下来
+					 * 保证create 和 terminal 顺序输出
 					 */
-					if (eventType.equals("end")) {
-						processConsoleRecorder.RecordRunMessage(project + "@"
-								+ processId);
+					message = debugEvent.toString();
+					if (judgeIfNeedLog(eventType, project, runType)) {
+						/*
+						 * 如果运行结束了 通知 console 将程序输出 记录下来
+						 */
+						if (eventType.equals("end")) {
+							processConsoleRecorder.RecordRunMessage(project + "@"
+									+ processId);
+						}
+						log(eventType, project, runType, message, processId);
 					}
+					return;
 				}
 				if (source instanceof InferiorRuntimeProcess) {
 					runType = "debug";
