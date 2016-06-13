@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
-import com.xclenter.test.util.context.IGetContext;
+import com.xclenter.test.common.context.IGetContext;
 
 public class FileSelectionRecorder implements IGetContext {
 	private static FileSelectionRecorder fileSelectionRecorder;

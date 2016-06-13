@@ -1,4 +1,4 @@
-package com.xclenter.test.util.addlistener.developAction;
+package com.xclenter.test.common.addlistener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,8 +6,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import com.xclenter.test.common.context.ContextUtil;
 import com.xclenter.test.listener.developAction.DocumentListener;
-import com.xclenter.test.util.context.ContextUtil;
 
 
 public class AddDocumentListenerUtil {

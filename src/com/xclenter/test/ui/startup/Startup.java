@@ -11,13 +11,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.console.ConsolePlugin;
 
+import com.xclenter.test.common.addlistener.AddDocumentListenerUtil;
+import com.xclenter.test.common.addlistener.UIAddListenerUtil;
 import com.xclenter.test.listener.debugAction.DebugEventSetListener;
 import com.xclenter.test.listener.developAction.ExecutionListener;
 import com.xclenter.test.listener.developAction.ResourceChangeListener;
 import com.xclenter.test.listener.developAction.build.ConsoleListener;
 import com.xclenter.test.listener.ui.WindowListener;
-import com.xclenter.test.util.addlistener.developAction.AddDocumentListenerUtil;
-import com.xclenter.test.util.addlistener.ui.UIAddListenerUtil;
 import com.xclenter.test.util.saveFile.SaveFileUtil;
 
 public class Startup implements IStartup{

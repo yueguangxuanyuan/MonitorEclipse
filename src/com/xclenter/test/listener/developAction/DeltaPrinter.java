@@ -63,7 +63,7 @@ public class DeltaPrinter implements IResourceDeltaVisitor {
 //            		 if(states != null && states.length > 0){
 //            			 System.out.println(states[0].getModificationTime() + "-" + System.currentTimeMillis());
 //            		 }
-//            		 
+            		 
             		 log("changed",res.getFullPath().toString(),ResourceUtil.getResourceType(res));
         		 }
         		 break;
