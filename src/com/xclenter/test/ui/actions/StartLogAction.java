@@ -36,10 +36,10 @@ public class StartLogAction implements IWorkbenchWindowActionDelegate {
 		System.setProperty("openlog4j", "true");
 		
 		action.setEnabled(false);
-		ActionUtil.enableAction("Xclenter", "xclenter.actions.controlLog.StopLogAction", true);
+		ActionUtil.enableAction("Monitor Eclipse", "xclenter.actions.controlLog.StopLogAction", true);
 
 		MessageDialog.openInformation(window.getShell(), "MonitorEclipse",
-				"start log4j");
+				"prepared to log");
 	}
 
 	/**

@@ -63,8 +63,6 @@ public class Startup implements IStartup{
         
         ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(new ConsoleListener());
         
-//        DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(new BreakPointListener());
-    
 	}
 
 }

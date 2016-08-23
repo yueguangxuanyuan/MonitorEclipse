@@ -54,31 +54,62 @@ public class DebugEventSetListener implements IDebugEventSetListener {
 				eventType = debugEvent.getKind() == DebugEvent.CREATE ? "start"
 						: "end";
 				Object source = debugEvent.getSource();
-//				System.out.println(source.getClass());
+				System.out.println(source.getClass());
 				if (source instanceof IProcess) {
 					IProcess process = (IProcess) source;
 					processId = process.toString();
 					processId = processId
 							.substring(processId.lastIndexOf("@") + 1);
 				}
+				/*
+				 * 在Mars 版本中 debug和normal  不能通过 process实力区分
+				 */
+				
+//				if (source instanceof InferiorRuntimeProcess) {
+//					runType = "debug";
+//					InferiorRuntimeProcess gdbProcess = (InferiorRuntimeProcess) source;
+//					String progressLabel = gdbProcess.getLabel();
+//					System.out.println(progressLabel);
+//					if (progressLabel != null && progressLabel.endsWith(".exe")) {
+//						int splitIndex = progressLabel.indexOf(".exe");
+//						if (splitIndex > 0
+//								&& splitIndex < progressLabel.length()) {
+//							project = progressLabel.substring(0, splitIndex);
+//						}
+//					}
+//					message = debugEvent.toString();
+//					break;
+//				}
+
+				
 				if (source instanceof RuntimeProcess) {
-					runType = "normal";
+					
 					RuntimeProcess runtimeProgress = (RuntimeProcess) source;
 
 					String progressLabel = runtimeProgress.getLabel();
-					if (progressLabel != null
-							&& progressLabel.startsWith(workspaceRootPath)) {
-						progressLabel = progressLabel
-								.substring(workspaceRootPath.length());
-
-						int splitIndex = progressLabel.indexOf(fileSperator,
-								fileSperator.length());
-						if (splitIndex > 0
-								&& splitIndex < progressLabel.length()) {
-							project = progressLabel.substring(
-									fileSperator.length(), splitIndex);
+					if(progressLabel != null){
+						if (progressLabel.startsWith(workspaceRootPath)) {
+							runType = "normal";
+							progressLabel = progressLabel
+									.substring(workspaceRootPath.length());
+	
+							int splitIndex = progressLabel.indexOf(fileSperator,
+									fileSperator.length());
+							if (splitIndex > 0
+									&& splitIndex < progressLabel.length()) {
+								project = progressLabel.substring(
+										fileSperator.length(), splitIndex);
+							}
+						}else if(progressLabel.endsWith(".exe")){
+							runType = "debug";
+							int splitIndex = progressLabel.indexOf(".exe");
+							if (splitIndex > 0
+									&& splitIndex < progressLabel.length()) {
+								project = progressLabel.substring(0, splitIndex);
+							}
 						}
 					}
+					
 					/*
 					 * 保证create 和 terminal 顺序输出
 					 */
@@ -89,25 +120,13 @@ public class DebugEventSetListener implements IDebugEventSetListener {
 						 */
 						if (eventType.equals("end")) {
 							processConsoleRecorder.RecordRunMessage(project + "@"
-									+ processId);
+									+ processId,runType);
 						}
 						log(eventType, project, runType, message, processId);
 					}
 					return;
 				}
-				if (source instanceof InferiorRuntimeProcess) {
-					runType = "debug";
-					InferiorRuntimeProcess gdbProcess = (InferiorRuntimeProcess) source;
-					String progressLabel = gdbProcess.getLabel();
-					if (progressLabel != null && progressLabel.endsWith(".exe")) {
-						int splitIndex = progressLabel.indexOf(".exe");
-						if (splitIndex > 0
-								&& splitIndex < progressLabel.length()) {
-							project = progressLabel.substring(0, splitIndex);
-						}
-					}
-				}
-
+				
 				message = debugEvent.toString();
 				break;
 			default:

@@ -82,7 +82,7 @@ public class ProcessConsoleRecorder {
 		
 	}
 	
-	public void RecordRunMessage(String projectId){
+	public void RecordRunMessage(String projectId,String  runType){
 		/*
 		 * 拿到针对该project的文档锁
 		 */
@@ -121,7 +121,7 @@ public class ProcessConsoleRecorder {
 			
 			if(document != null){
 				Thread.sleep(500);
-				log(projectId,document.get());
+				log(projectId,runType,document.get());
 			}
 			documentLocker.release();
 		} catch (InterruptedException e) {
@@ -131,12 +131,12 @@ public class ProcessConsoleRecorder {
 		
 	}
 	
-	private void log(String projectId,String message) {
+	private void log(String projectId,String runType,String message) {
 		int indexOfSplit = projectId.indexOf("@");
 		if(indexOfSplit > 0 && indexOfSplit < projectId.length()){
 			String projectName = projectId.substring(0,indexOfSplit);
 			String processId = projectId.substring(indexOfSplit+1);
-			logger.info(":: action_type ::output:: runType ::normal:: project ::"+projectName+":: processId ::"+processId+":: length ::"+message.length()+":: message ::"+message);
+			logger.info(":: action_type ::output:: runType ::"+runType+":: project ::"+projectName+":: processId ::"+processId+":: length ::"+message.length()+":: message ::"+message);
 		}
 	}
 }

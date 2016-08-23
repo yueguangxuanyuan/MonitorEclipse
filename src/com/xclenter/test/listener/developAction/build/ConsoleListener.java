@@ -27,7 +27,7 @@ public class ConsoleListener implements IConsoleListener {
 //		System.out.println("console added[");
 		for (IConsole console : arg0) {
 //			System.out
-//					.println(console.getName() + console.getClass().getName());
+//					.println(console.getName() +"***"+ console.getClass().getName());
 			/*
 			 * normal运行时的输出窗口
 			 */
@@ -45,6 +45,13 @@ public class ConsoleListener implements IConsoleListener {
 					if (splitIndex > 0 && splitIndex < progressLabel.length()) {
 						project = progressLabel.substring(
 								fileSperator.length(), splitIndex);
+					}
+				}else if(progressLabel != null
+						&& progressLabel.endsWith(".exe")){
+					int splitIndex = progressLabel.indexOf(".exe");
+					if (splitIndex > 0
+							&& splitIndex < progressLabel.length()) {
+						project = progressLabel.substring(0, splitIndex);
 					}
 				}
 				if(!project.equals("unknown")){
