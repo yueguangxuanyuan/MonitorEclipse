@@ -8,7 +8,6 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.RuntimeProcess;
-import org.eclipse.ui.progress.IProgressConstants;
 
 import com.xclenter.test.log.debug.ProcessConsoleRecorder;
 

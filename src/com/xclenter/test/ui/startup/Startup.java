@@ -13,6 +13,7 @@ import org.eclipse.ui.console.ConsolePlugin;
 
 import com.xclenter.test.common.addlistener.AddDocumentListenerUtil;
 import com.xclenter.test.common.addlistener.UIAddListenerUtil;
+import com.xclenter.test.listener.debugAction.BreakPointListener;
 import com.xclenter.test.listener.debugAction.DebugEventSetListener;
 import com.xclenter.test.listener.developAction.ExecutionListener;
 import com.xclenter.test.listener.developAction.ResourceChangeListener;
@@ -61,6 +62,8 @@ public class Startup implements IStartup{
         DebugPlugin.getDefault().addDebugEventListener(new DebugEventSetListener());
         
         ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(new ConsoleListener());
+        
+//        DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(new BreakPointListener());
     
 	}
 
