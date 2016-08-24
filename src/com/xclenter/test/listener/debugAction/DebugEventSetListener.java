@@ -54,7 +54,7 @@ public class DebugEventSetListener implements IDebugEventSetListener {
 				eventType = debugEvent.getKind() == DebugEvent.CREATE ? "start"
 						: "end";
 				Object source = debugEvent.getSource();
-				System.out.println(source.getClass());
+//				System.out.println(source.getClass());
 				if (source instanceof IProcess) {
 					IProcess process = (IProcess) source;
 					processId = process.toString();

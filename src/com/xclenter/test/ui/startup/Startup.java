@@ -49,8 +49,6 @@ public class Startup implements IStartup{
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         workspace.addResourceChangeListener(new ResourceChangeListener());
         
-        SaveFileUtil.initSaveContext();
-        
         /*
         * ¼àÌı¿É²¶»ñµÄÃüÁî
         */

@@ -7,6 +7,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.xclenter.test.util.action.ActionUtil;
+import com.xclenter.test.util.saveFile.SaveFileUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -33,6 +34,9 @@ public class StartLogAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
+		
+        SaveFileUtil.initSaveContext();
+		
 		System.setProperty("openlog4j", "true");
 		
 		action.setEnabled(false);
