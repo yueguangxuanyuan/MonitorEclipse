@@ -17,16 +17,21 @@ public class BuildRecorder {
 	 */
 	HashMap<String,Semaphore> lockRecorder; 
 	
+
+	
 	/*
 	 * 保证 HashMap的顺序访问 规避并发读写风险
 	 */
     Semaphore messageMapLocker ;
     Semaphore lockMapLocker;
+
 	private BuildRecorder() {
 		messageRecorder = new HashMap<>();
 		lockRecorder = new HashMap<>();
+
 		messageMapLocker = new Semaphore(1);
 		lockMapLocker = new Semaphore(1);
+
 	}
 
 	public static BuildRecorder getBuildRecorder() {

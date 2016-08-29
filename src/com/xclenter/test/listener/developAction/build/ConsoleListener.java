@@ -35,8 +35,10 @@ public class ConsoleListener implements IConsoleListener {
 				ProcessConsole processConsole = (ProcessConsole) console;
 				String progressLabel = processConsole.getProcess().getLabel();
 				String project = "unknown";
+				String runType = "unknow";
 				if (progressLabel != null
 						&& progressLabel.startsWith(workspaceRootPath)) {
+					runType = "normal";
 					progressLabel = progressLabel.substring(workspaceRootPath
 							.length());
 
@@ -48,6 +50,7 @@ public class ConsoleListener implements IConsoleListener {
 					}
 				}else if(progressLabel != null
 						&& progressLabel.endsWith(".exe")){
+					runType = "debug";
 					int splitIndex = progressLabel.indexOf(".exe");
 					if (splitIndex > 0
 							&& splitIndex < progressLabel.length()) {
@@ -57,7 +60,7 @@ public class ConsoleListener implements IConsoleListener {
 				if(!project.equals("unknown")){
 					String progressId = processConsole.getProcess().toString();
 					String projectId = project + progressId.substring(progressId.lastIndexOf("@"));
-					processConsoleRecorder.RecordDocument(projectId, processConsole.getDocument());
+					processConsoleRecorder.RecordDocument(projectId, processConsole.getDocument(),runType);
 				}
 			}
 			// cpp ±àÒë´°¿Ú
