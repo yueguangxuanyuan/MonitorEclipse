@@ -25,7 +25,8 @@ public class Startup implements IStartup{
 
 	@Override
 	public void earlyStartup() {
-		System.setProperty("openlog4j", "false");
+		SaveFileUtil.initSaveContext();
+		System.setProperty("openlog4j", "true");
 		// TODO Auto-generated method stub
 		//ªÒ»°workbench
 		IWorkbench workbench = PlatformUI.getWorkbench();

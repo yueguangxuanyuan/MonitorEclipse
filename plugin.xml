@@ -7,7 +7,7 @@
             class="com.xclenter.test.ui.startup.Startup">
       </startup>
    </extension>
-   <extension
+   <!--<extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="MonitorEclipse.actionSet"
@@ -39,6 +39,6 @@
                tooltip="Start">
          </action>
       </actionSet>
-   </extension>
+   </extension> -->
 
 </plugin>

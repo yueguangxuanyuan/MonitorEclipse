@@ -1,6 +1,7 @@
 package com.xclenter.test.util.saveFile;
 
 import java.io.File;
+import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +68,11 @@ public class SaveFileUtil {
 	 * 在workbench startup的时候触发一次来初始化文件保存上下文 清空原有目录 将现有工程文件保存进去
 	 */
 	public static void initSaveContext() {
+		
+		Date date = new Date();
+		projectSaveRootPath += File.separator + date.getTime();
+		middleFileSaveRootPath += File.separator + date.getTime();
+		
 		clearFileSaveSpace();
 		saveAllExistProjects();
 	}
