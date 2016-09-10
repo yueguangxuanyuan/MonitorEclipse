@@ -2,12 +2,15 @@ package com.xclenter.test.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.xclenter.test.ui.dialog.LoginDialog;
 import com.xclenter.test.util.action.ActionUtil;
 import com.xclenter.test.util.saveFile.SaveFileUtil;
+import com.xclenter.test.util.validation.LoginValidationUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -17,13 +20,13 @@ import com.xclenter.test.util.saveFile.SaveFileUtil;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class StartLogAction implements IWorkbenchWindowActionDelegate {
+public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	
 	/**
 	 * The constructor.
 	 */
-	public StartLogAction() {
+	public DownloadAction() {
 	
 	}
 
@@ -34,16 +37,25 @@ public class StartLogAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		
-        SaveFileUtil.initSaveContext();
-		
-		System.setProperty("openlog4j", "true");
-		
-		action.setEnabled(false);
-		ActionUtil.enableAction("Monitor Eclipse", "xclenter.actions.controlLog.StopLogAction", true);
-
-		MessageDialog.openInformation(window.getShell(), "MonitorEclipse",
-				"prepared to log");
+		if(LoginValidationUtil.isLogin()){
+			/*
+			 * do something
+			 */
+		}else{
+			LoginDialog loginDialog = new LoginDialog(window.getShell());
+			
+			loginDialog.create();
+			if(loginDialog.open() == Window.OK){
+				/*
+				 * 窗口打开成功  验证登陆
+				 */
+				String account = loginDialog.getUsername();
+				String password = loginDialog.getPassword();
+				
+				System.out.println("Hello , " + account + " - "+password);
+			}
+		}
+        
 	}
 
 	/**

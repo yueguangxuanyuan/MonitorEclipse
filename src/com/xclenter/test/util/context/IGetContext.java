@@ -1,4 +1,4 @@
-package com.xclenter.test.common.context;
+package com.xclenter.test.util.context;
 
 import java.util.Map;
 

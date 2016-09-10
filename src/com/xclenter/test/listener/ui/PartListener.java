@@ -6,8 +6,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.xclenter.test.common.addlistener.AddDocumentListenerUtil;
-import com.xclenter.test.common.context.ContextUtil;
+import com.xclenter.test.util.addlistener.AddDocumentListenerUtil;
+import com.xclenter.test.util.context.ContextUtil;
 
 public class PartListener implements IPartListener{
 	

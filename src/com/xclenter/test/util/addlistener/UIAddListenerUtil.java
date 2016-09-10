@@ -1,4 +1,4 @@
-package com.xclenter.test.common.addlistener;
+package com.xclenter.test.util.addlistener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

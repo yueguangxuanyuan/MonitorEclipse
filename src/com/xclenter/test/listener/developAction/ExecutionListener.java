@@ -17,10 +17,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 
-import com.xclenter.test.common.context.ContextUtil;
-import com.xclenter.test.common.context.IGetContext;
 import com.xclenter.test.log.selectDelta.FileSelectionRecorder;
 import com.xclenter.test.log.selectDelta.TextSelectionRecorder;
+import com.xclenter.test.util.context.ContextUtil;
+import com.xclenter.test.util.context.IGetContext;
 
 public class ExecutionListener implements IExecutionListener {
 	private static Logger logger = LogManager.getLogger("MessageLog");

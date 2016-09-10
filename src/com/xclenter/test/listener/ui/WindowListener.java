@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import com.xclenter.test.common.addlistener.UIAddListenerUtil;
+import com.xclenter.test.util.addlistener.UIAddListenerUtil;
 
 public class WindowListener implements IWindowListener{
 	private static Logger logger = LogManager.getLogger("MessageLog");

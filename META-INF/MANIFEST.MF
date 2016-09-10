@@ -9,12 +9,12 @@ Bundle-ClassPath: .,
 Bundle-Activator: com.xclenter.test.Activator
 Bundle-Vendor: XCLENTER
 Export-Package: com.xclenter.test;uses:="org.eclipse.ui.plugin,org.osgi.framework",
- com.xclenter.test.common.addlistener;uses:="org.eclipse.ui",
- com.xclenter.test.common.context,
  com.xclenter.test.listener.developAction;uses:="org.eclipse.jface.text",
  com.xclenter.test.listener.ui;uses:="org.eclipse.ui,org.eclipse.jface.viewers",
  com.xclenter.test.log.documentDelta,
- com.xclenter.test.ui.startup;uses:="org.eclipse.ui"
+ com.xclenter.test.ui.startup;uses:="org.eclipse.ui",
+ com.xclenter.test.util.addlistener;uses:="org.eclipse.ui",
+ com.xclenter.test.util.context
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.workbench,

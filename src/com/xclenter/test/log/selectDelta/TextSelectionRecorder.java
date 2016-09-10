@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.xclenter.test.common.context.IGetContext;
+import com.xclenter.test.util.context.IGetContext;
 
 public class TextSelectionRecorder implements IGetContext {
 	private static Logger logger = LogManager.getLogger("MessageLog");

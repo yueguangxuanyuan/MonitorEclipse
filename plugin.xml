@@ -7,7 +7,7 @@
             class="com.xclenter.test.ui.startup.Startup">
       </startup>
    </extension>
-   <!--<extension
+   <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="MonitorEclipse.actionSet"
@@ -20,25 +20,47 @@
                   name="controlLog">
             </separator>
          </menu>
-          <action
-               class="com.xclenter.test.ui.actions.StopLogAction"
+         <action
+               class="com.xclenter.test.ui.actions.UploadAction"
                icon="icons/sample.gif"
-               id="xclenter.actions.controlLog.StopLogAction"
-               label="Stop"
-               menubarPath="xclenter/controlLog"
-               toolbarPath="controlLog"
-               tooltip="Stop">
+               id="xclenter.actions.controlLog.UploadAction"
+               label="Upload"
+               menubarPath="xclenter/controlLog">
+               <enablement>
+                     <systemProperty  name="em_isLogin" value="true"/>
+               </enablement>
          </action>
          <action
-               class="com.xclenter.test.ui.actions.StartLogAction"
+          	   class="com.xclenter.test.ui.actions.TestAction"	
                icon="icons/sample.gif"
-               id="xclenter.actions.controlLog.StartLogAction"
-               label="Start"
-               menubarPath="xclenter/controlLog"
-               toolbarPath="controlLog"
-               tooltip="Start">
+               id="xclenter.actions.controlLog.TestAction"
+               label="Test"
+               menubarPath="xclenter/controlLog">
+               <enablement>
+                     <systemProperty  name="em_isLogin" value="true"/>
+               </enablement>
+         </action>
+         <action
+        	   class="com.xclenter.test.ui.actions.DownloadAction"
+               icon="icons/sample.gif"
+               id="xclenter.actions.controlLog.DownloadAction"
+               label="Download"
+               menubarPath="xclenter/controlLog">
+               <enablement>
+                     <systemProperty  name="em_isLogin" value="true"/>
+               </enablement>
+         </action>
+         <action
+               class="com.xclenter.test.ui.actions.LoginAction"
+               icon="icons/sample.gif"
+               id="xclenter.actions.controlLog.LoginAction"
+               label="Login"
+               menubarPath="xclenter/controlLog">
+               <enablement>
+                     <systemProperty  name="em_isLogin" value="false"/>
+               </enablement>
          </action>
       </actionSet>
-   </extension> -->
+   </extension>
 
 </plugin>
