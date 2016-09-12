@@ -1,4 +1,4 @@
-package com.xclenter.test.log.debug;
+package com.xclenter.test.log;
 
 import java.util.HashMap;
 import java.util.HashSet;

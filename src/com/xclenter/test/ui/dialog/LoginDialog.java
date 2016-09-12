@@ -93,7 +93,7 @@ public class LoginDialog extends TitleAreaDialog {
 
 	  // save content of the Text fields because they get disposed
 	  // as soon as the Dialog closes
-	  private void saveInput() {
+	  protected void saveInput() {
 	    username = txtUsername.getText();
 	    password = txtPassword.getText();
 

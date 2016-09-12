@@ -10,7 +10,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import com.xclenter.test.ui.dialog.LoginDialog;
 import com.xclenter.test.util.action.ActionUtil;
 import com.xclenter.test.util.saveFile.SaveFileUtil;
-import com.xclenter.test.util.validation.LoginValidationUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -37,24 +36,7 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		if(LoginValidationUtil.isLogin()){
-			/*
-			 * do something
-			 */
-		}else{
-			LoginDialog loginDialog = new LoginDialog(window.getShell());
-			
-			loginDialog.create();
-			if(loginDialog.open() == Window.OK){
-				/*
-				 * 窗口打开成功  验证登陆
-				 */
-				String account = loginDialog.getUsername();
-				String password = loginDialog.getPassword();
-				
-				System.out.println("Hello , " + account + " - "+password);
-			}
-		}
+		
         
 	}
 

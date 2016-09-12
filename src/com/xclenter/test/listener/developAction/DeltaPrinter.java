@@ -10,8 +10,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 
-import com.xclenter.test.log.documentDelta.DocumentDeltaRecorder;
-import com.xclenter.test.util.resource.ResourceUtil;
+import com.xclenter.test.log.DocumentDeltaRecorder;
+import com.xclenter.test.util.ResourceUtil;
 import com.xclenter.test.util.saveFile.SaveFileUtil;
 
 public class DeltaPrinter implements IResourceDeltaVisitor {

@@ -1,16 +1,13 @@
 package com.xclenter.test.ui.actions;
 
+import java.util.HashSet;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.jface.dialogs.MessageDialog;
 
-import com.xclenter.test.ui.dialog.LoginDialog;
-import com.xclenter.test.util.action.ActionUtil;
-import com.xclenter.test.util.saveFile.SaveFileUtil;
-import com.xclenter.test.util.validation.LoginValidationUtil;
+import com.xclenter.test.ui.dialog.TaskSelectDialog;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -37,25 +34,10 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		if(LoginValidationUtil.isLogin()){
-			/*
-			 * do something
-			 */
-		}else{
-			LoginDialog loginDialog = new LoginDialog(window.getShell());
-			
-			loginDialog.create();
-			if(loginDialog.open() == Window.OK){
-				/*
-				 * 窗口打开成功  验证登陆
-				 */
-				String account = loginDialog.getUsername();
-				String password = loginDialog.getPassword();
-				
-				System.out.println("Hello , " + account + " - "+password);
-			}
-		}
         
+		TaskSelectDialog taskSelectDialog = new TaskSelectDialog(window.getShell(), new HashSet());
+		
+		taskSelectDialog.open();
 	}
 
 	/**

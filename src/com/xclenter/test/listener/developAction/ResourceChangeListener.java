@@ -8,7 +8,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 
-import com.xclenter.test.util.resource.ResourceUtil;
+import com.xclenter.test.util.ResourceUtil;
 
 public class ResourceChangeListener implements IResourceChangeListener {
 	private static Logger logger = LogManager.getLogger("MessageLog");

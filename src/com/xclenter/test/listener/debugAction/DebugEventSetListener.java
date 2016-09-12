@@ -9,7 +9,7 @@ import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.RuntimeProcess;
 
-import com.xclenter.test.log.debug.ProcessConsoleRecorder;
+import com.xclenter.test.log.ProcessConsoleRecorder;
 
 public class DebugEventSetListener implements IDebugEventSetListener {
 	private static Logger logger = LogManager.getLogger("MessageLog");

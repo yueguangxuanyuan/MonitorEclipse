@@ -1,16 +1,26 @@
 package com.xclenter.test.ui.actions;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.xclenter.test.controller.LoginController;
 import com.xclenter.test.ui.dialog.LoginDialog;
+import com.xclenter.test.util.HttpCommon;
+import com.xclenter.test.util.LoginAuth;
+import com.xclenter.test.util.ServerInfo;
 import com.xclenter.test.util.action.ActionUtil;
 import com.xclenter.test.util.saveFile.SaveFileUtil;
-import com.xclenter.test.util.validation.LoginValidationUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -23,11 +33,12 @@ import com.xclenter.test.util.validation.LoginValidationUtil;
 public class LoginAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	
+	private LoginController loginDao ;
 	/**
 	 * The constructor.
 	 */
 	public LoginAction() {
-	
+		loginDao = LoginController.getLoginDao();
 	}
 
 	/**
@@ -37,27 +48,43 @@ public class LoginAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		if(LoginValidationUtil.isLogin()){
-			/*
-			 * do something
-			 */
+		if(LoginAuth.isLogin()){
+			MessageBox messagebox = new MessageBox(window.getShell(),SWT.ICON_INFORMATION);
+			messagebox.setMessage("you have logged in. if you want to change user, you need to log out firstly");
+			messagebox.open();
 		}else{
-			LoginDialog loginDialog = new LoginDialog(window.getShell());
+			LoginDialog loginDialog = new LoginDialog(window.getShell()){
+				@Override
+				  protected void okPressed() {
+					this.saveInput();
+					String account = this.getUsername();
+				    String password = this.getPassword();
+					
+					boolean login_result = loginDao.login(account,password);
+					
+					String message;
+					if(login_result){
+						message = "welcome , Mr/Miss " + LoginAuth.getUsername();
+					}else{
+						message = "something wrong please check inputvalue/network";
+					}
+					MessageBox messagebox = new MessageBox(window.getShell(),SWT.ICON_INFORMATION);
+					messagebox.setMessage(message);
+					messagebox.open();
+					if(login_result){
+						super.okPressed();
+					}
+				  }
+			};
 			
 			loginDialog.create();
 			if(loginDialog.open() == Window.OK){
-				/*
-				 * 窗口打开成功  验证登陆
-				 */
-				String account = loginDialog.getUsername();
-				String password = loginDialog.getPassword();
-				
-				System.out.println("Hello , " + account + " - "+password);
+				return;
 			}
 		}
         
 	}
-
+	
 	/**
 	 * Selection in the workbench has been changed. We can change the state of
 	 * the 'real' action here if we want, but this can only happen after the

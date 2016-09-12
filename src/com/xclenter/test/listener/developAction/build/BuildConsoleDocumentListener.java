@@ -3,7 +3,7 @@ package com.xclenter.test.listener.developAction.build;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 
-import com.xclenter.test.log.build.BuildRecorder;
+import com.xclenter.test.log.BuildRecorder;
 
 public class BuildConsoleDocumentListener implements IDocumentListener{
 	

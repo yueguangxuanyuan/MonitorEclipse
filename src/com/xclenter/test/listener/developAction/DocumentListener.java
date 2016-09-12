@@ -5,7 +5,7 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 
-import com.xclenter.test.log.documentDelta.DocumentDeltaRecorder;
+import com.xclenter.test.log.DocumentDeltaRecorder;
 public class DocumentListener implements IDocumentListener{
 	private DocumentDeltaRecorder documentDeltaRecorder;
 	

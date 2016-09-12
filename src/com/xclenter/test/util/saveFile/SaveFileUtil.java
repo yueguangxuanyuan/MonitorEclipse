@@ -1,7 +1,12 @@
 package com.xclenter.test.util.saveFile;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +21,13 @@ public class SaveFileUtil {
 
 	private static String middleFileSaveRootPath = "com.xclenter.monitor"
 			+ File.separator + "middleFile";
-
+	
+	public static String utilFileSaveRootPath = "com.xclenter.monitor"
+			+ File.separator + "utilFile";
+	
+	public static String logSaveRootPath = "com.xclenter.monitor"
+			+ File.separator + "logs";
+	
 	private static void clearFileSaveSpace() {
 		File projectSaveRootDir = new File(projectSaveRootPath);
 		projectSaveRootDir.mkdirs();
@@ -25,7 +36,9 @@ public class SaveFileUtil {
 		File middleFileSaveRootDir = new File(middleFileSaveRootPath);
 		middleFileSaveRootDir.mkdirs();
 		DeleteUtil.delAllFile(middleFileSaveRootPath);
-
+		
+		File utilFileSaveRootDir = new File(utilFileSaveRootPath);
+		utilFileSaveRootDir.mkdirs();
 	}
 
 	public static String saveMiddleFile(String workspacePath, String OSPath) {
@@ -76,4 +89,32 @@ public class SaveFileUtil {
 		clearFileSaveSpace();
 		saveAllExistProjects();
 	}
+	
+	public static void clearLegacy(){
+		File projectSaveRootDir = new File(projectSaveRootPath);
+		projectSaveRootDir.mkdirs();
+		String[] savedProjects=projectSaveRootDir.list();
+		if(savedProjects.length > 0){
+			Arrays.sort(savedProjects);
+			List<String> keepedProjects = new ArrayList<String>();
+			keepedProjects.add(savedProjects[savedProjects.length -1]);
+			DeleteUtil.delAllFileWithEX(projectSaveRootPath, keepedProjects);
+		}
+		
+
+		File middleFileSaveRootDir = new File(middleFileSaveRootPath);
+		middleFileSaveRootDir.mkdirs();
+		String[] savedMiddleFiles = middleFileSaveRootDir.list();
+		if(savedMiddleFiles.length > 0){
+			Arrays.sort(savedMiddleFiles);
+			List<String> keepedMiddleFiles = new ArrayList<String>();
+			keepedMiddleFiles.add(savedMiddleFiles[savedMiddleFiles.length -1]);
+			DeleteUtil.delAllFileWithEX(middleFileSaveRootPath, keepedMiddleFiles);
+		}
+		
+		List<String> keepedlogFiles = new ArrayList<String>();
+		keepedlogFiles.add("appRollingFile.log");
+		DeleteUtil.delAllFileWithEX(logSaveRootPath, keepedlogFiles);
+	}
+	
 }

@@ -7,7 +7,7 @@ import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleListener;
 
-import com.xclenter.test.log.debug.ProcessConsoleRecorder;
+import com.xclenter.test.log.ProcessConsoleRecorder;
 
 public class ConsoleListener implements IConsoleListener {
 	String workspaceRootPath;

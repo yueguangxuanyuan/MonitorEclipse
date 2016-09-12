@@ -5,13 +5,22 @@ Bundle-SymbolicName: MonitorEclipse;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .,
  lib/log4j-api-2.5.jar,
- lib/log4j-core-2.5.jar
+ lib/log4j-core-2.5.jar,
+ lib/commons-codec-1.9.jar,
+ lib/commons-logging-1.2.jar,
+ lib/httpclient-4.5.2.jar,
+ lib/httpclient-cache-4.5.2.jar,
+ lib/httpcore-4.4.4.jar,
+ lib/json-lib-2.4-jdk15.jar,
+ lib/commons-lang-2.6.jar,
+ lib/commons-beanutils.jar,
+ lib/ezmorph-1.0.6.jar,
+ lib/commons-collections-3.2.1.jar
 Bundle-Activator: com.xclenter.test.Activator
 Bundle-Vendor: XCLENTER
 Export-Package: com.xclenter.test;uses:="org.eclipse.ui.plugin,org.osgi.framework",
  com.xclenter.test.listener.developAction;uses:="org.eclipse.jface.text",
  com.xclenter.test.listener.ui;uses:="org.eclipse.ui,org.eclipse.jface.viewers",
- com.xclenter.test.log.documentDelta,
  com.xclenter.test.ui.startup;uses:="org.eclipse.ui",
  com.xclenter.test.util.addlistener;uses:="org.eclipse.ui",
  com.xclenter.test.util.context

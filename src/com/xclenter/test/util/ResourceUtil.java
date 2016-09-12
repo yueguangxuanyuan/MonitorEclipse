@@ -1,4 +1,4 @@
-package com.xclenter.test.util.resource;
+package com.xclenter.test.util;
 
 import org.eclipse.core.resources.IResource;
 
