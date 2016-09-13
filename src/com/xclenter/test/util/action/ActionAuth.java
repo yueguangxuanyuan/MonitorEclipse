@@ -1,4 +1,4 @@
-package com.xclenter.test.util;
+package com.xclenter.test.util.action;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 
 import com.xclenter.test.util.saveFile.SaveFileUtil;
 
-public class LoginAuth {
+public class ActionAuth {
 	private static String filePath = SaveFileUtil.utilFileSaveRootPath + File.separator + "user_key";
 	
 	private static String user_key;
@@ -22,7 +22,7 @@ public class LoginAuth {
 	private static final int readArraySizePerRead=64;
 	
 	public static void saveUser_key(String user_key){
-		LoginAuth.user_key = user_key;
+		ActionAuth.user_key = user_key;
 		File file = new File(filePath);
 		try {
 			if(!file.exists()){
@@ -67,9 +67,9 @@ public class LoginAuth {
 	
 	public static void changeLoginState(boolean state, String username){
 		if(state){
-			LoginAuth.Username = username;
+			ActionAuth.Username = username;
 		}else{
-			LoginAuth.Username = "unknown";
+			ActionAuth.Username = "unknown";
 		}
 		
 		LoginState = state;

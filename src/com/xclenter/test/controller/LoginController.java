@@ -6,8 +6,8 @@ import java.util.Map;
 import net.sf.json.JSONObject;
 
 import com.xclenter.test.util.HttpCommon;
-import com.xclenter.test.util.LoginAuth;
 import com.xclenter.test.util.ServerInfo;
+import com.xclenter.test.util.action.ActionAuth;
 import com.xclenter.test.util.saveFile.SaveFileUtil;
 
 public class LoginController {
@@ -25,10 +25,12 @@ public class LoginController {
 		return loginDao;
 	}
 	
-	public boolean login(String username,String password){
+	public CallResult login(String username,String password){
+		boolean state=false;
+		String message = null;
 		Map<String,String> loginMesssage = new HashMap<>();
 		
-		String user_key = LoginAuth.getUser_key();
+		String user_key = ActionAuth.getUser_key();
 		
 		loginMesssage.put("username", username);
 		loginMesssage.put("password", password);
@@ -41,17 +43,43 @@ public class LoginController {
 			if(result != null && result.equals("ok")){
 				String new_user_key =  feedBack.getString("used_key");
 				if(user_key == null || !user_key.equals(new_user_key)){
-					/*
-					 * clear log environment;
-					 */
 					SaveFileUtil.clearLegacy();
-					LoginAuth.saveUser_key(user_key);
+					ActionAuth.saveUser_key(user_key);
+					message = "continue";
 				}
 				
-				LoginAuth.changeLoginState(true,username);
-				return true;
+				ActionAuth.changeLoginState(true,username);
+				state = true;
+			}else if(result != null && result.equals("error")){
+				message = feedBack.getString("msg");
+			}else{
+				message = "server is not available";
 			}
+		}else{
+			message = "please check network";
 		}
-		return false;
+		
+		return new CallResult(state,message);
+	}
+	
+	public CallResult logout(){
+		boolean state=false;
+		String message = null;
+		String url = "http://"+ServerInfo.serverIP+"/logout/";
+		JSONObject feedBack = HttpCommon.getHttpCommon().getJsonResponseWithParams(url,null);
+		if(feedBack != null){
+			String result = feedBack.getString("result");
+			if(result != null && result.equals("ok")){
+				ActionAuth.changeLoginState(false,"");
+				state = true;
+			}else if(result != null && result.equals("error")){
+				message = feedBack.getString("msg");
+			}else{
+				message = "server is not available";
+			}
+		}else{
+			message = "please check network";
+		}
+		return new CallResult(state,message);
 	}
 }

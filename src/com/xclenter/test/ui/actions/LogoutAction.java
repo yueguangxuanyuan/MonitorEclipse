@@ -1,19 +1,27 @@
 package com.xclenter.test.ui.actions;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sf.json.JSONObject;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.jface.dialogs.MessageDialog;
 
-import com.xclenter.test.controller.DownloadController;
-import com.xclenter.test.controller.TaskModel;
-import com.xclenter.test.ui.dialog.TaskSelectDialog;
+import com.xclenter.test.controller.CallResult;
+import com.xclenter.test.controller.LoginController;
+import com.xclenter.test.ui.dialog.LoginDialog;
+import com.xclenter.test.util.HttpCommon;
+import com.xclenter.test.util.ServerInfo;
 import com.xclenter.test.util.action.ActionAuth;
+import com.xclenter.test.util.action.ActionUtil;
+import com.xclenter.test.util.saveFile.SaveFileUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -23,14 +31,16 @@ import com.xclenter.test.util.action.ActionAuth;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class DownloadAction implements IWorkbenchWindowActionDelegate {
+public class LogoutAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
-	
+
+	private LoginController loginDao;
+
 	/**
 	 * The constructor.
 	 */
-	public DownloadAction() {
-	
+	public LogoutAction() {
+		loginDao = LoginController.getLoginDao();
 	}
 
 	/**
@@ -40,21 +50,28 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		/*
-		 * we should check  if they have taken one of task
-		 */
-		if(!ActionAuth.isLogin()){
-			MessageBox messageBox = new MessageBox(window.getShell(),SWT.ICON_INFORMATION);
-			messageBox.setMessage("Please Login first");
-			messageBox.open();
-		}else{
-			List<TaskModel> taskModel = DownloadController.getAvailable_tasks();
-			
-			TaskSelectDialog taskSelectDialog = new TaskSelectDialog(window.getShell(), new HashSet<String>());
-			
-			taskSelectDialog.open();
+		if (!ActionAuth.isLogin()) {
+			MessageBox messagebox = new MessageBox(window.getShell(),
+					SWT.ICON_INFORMATION);
+			messagebox
+					.setMessage(" you have logged out.  no need to do it again");
+			messagebox.open();
+		} else {
+			String username = ActionAuth.getUsername();
+			CallResult logoutResult = loginDao.logout();
+
+			MessageBox messagebox = new MessageBox(window.getShell(),
+					SWT.ICON_INFORMATION);
+			if (logoutResult.getState()) {
+				messagebox.setMessage(username
+						+ " : you have logged out successfully. ");
+			} else {
+				messagebox.setMessage(username + " : you fail to log out . ("
+						+ logoutResult.getMessage() + ")");
+			}
+			messagebox.open();
 		}
-        
+
 	}
 
 	/**
@@ -65,7 +82,7 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		
+
 	}
 
 	/**

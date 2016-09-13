@@ -56,7 +56,7 @@ public class TaskSelectDialog extends TitleAreaDialog {
 		
 		// create label
 		Label lbSubject = new Label(cont, SWT.NONE);
-		lbSubject.setText("请作业/考试");
+		lbSubject.setText("请选择作业/考试");
 		
 		// create combo
 		GridData dataSubject = new GridData();
@@ -72,24 +72,6 @@ public class TaskSelectDialog extends TitleAreaDialog {
 		subjectCombo.select(0);
 
 		subjectCombo.setLayoutData(dataSubject);
-		
-//		// Use selection listener to update stage list corresponding to given subject
-//		subjectCombo.addSelectionListener(new SelectionListener(){
-//
-//			@Override
-//			public void widgetDefaultSelected(SelectionEvent event) {
-//			}
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent event) {
-//				// update stage combo
-//				setComboContents(stageCombo , new TreeSet<String>(subjects.get(subjectCombo.getText()).keySet()));
-//				stageCombo.update();
-//				// select the first element by default
-//				stageCombo.select(0);
-//			}
-//			
-//		});
 	}
 
 	@Override

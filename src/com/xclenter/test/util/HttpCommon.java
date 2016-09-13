@@ -140,11 +140,13 @@ public class HttpCommon {
 		try {
 			URI uri = new URIBuilder().setPath(url).build();
 			HttpPost httpPost= new HttpPost(uri);
-			List<NameValuePair> nvps = new ArrayList <NameValuePair>();  
-			for(String key : params.keySet()){
-				nvps.add(new BasicNameValuePair(key , params.get(key)));
+			if(params != null){
+				List<NameValuePair> nvps = new ArrayList <NameValuePair>();  
+				for(String key : params.keySet()){
+					nvps.add(new BasicNameValuePair(key , params.get(key)));
+				}
+				httpPost.setEntity(new UrlEncodedFormEntity(nvps)); 
 			}
-			httpPost.setEntity(new UrlEncodedFormEntity(nvps)); 
 			
 			setX_csrf(httpPost);
 			HttpResponse  httpResponse = httpClient.execute(httpPost,httpContext);

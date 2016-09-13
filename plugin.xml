@@ -21,6 +21,12 @@
             </separator>
          </menu>
          <action
+               class="com.xclenter.test.ui.actions.LogoutAction"
+               id="xclenter.actions.controlLog.LogoutAction"
+               label="Logout"
+               menubarPath="xclenter/controlLog">
+         </action>
+         <action
                class="com.xclenter.test.ui.actions.UploadAction"
                id="xclenter.actions.controlLog.UploadAction"
                label="Upload"
