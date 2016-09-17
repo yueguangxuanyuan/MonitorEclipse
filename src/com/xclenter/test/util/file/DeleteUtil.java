@@ -1,4 +1,4 @@
-package com.xclenter.test.util.saveFile;
+package com.xclenter.test.util.file;
 
 import java.io.File;
 import java.util.List;

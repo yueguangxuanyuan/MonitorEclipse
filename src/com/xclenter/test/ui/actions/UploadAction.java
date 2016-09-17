@@ -3,13 +3,19 @@ package com.xclenter.test.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.xclenter.test.dao.CallResult;
+import com.xclenter.test.dao.UploadDao;
 import com.xclenter.test.ui.dialog.LoginDialog;
 import com.xclenter.test.util.action.ActionUtil;
-import com.xclenter.test.util.saveFile.SaveFileUtil;
+import com.xclenter.test.util.action.ExamAuth;
+import com.xclenter.test.util.action.LoginAuth;
+import com.xclenter.test.util.file.SaveFileUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -21,12 +27,12 @@ import com.xclenter.test.util.saveFile.SaveFileUtil;
  */
 public class UploadAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
-	
+
 	/**
 	 * The constructor.
 	 */
 	public UploadAction() {
-	
+
 	}
 
 	/**
@@ -36,6 +42,36 @@ public class UploadAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
+		if (LoginAuth.isLogin()) {
+			if (ExamAuth.getExamAuth().isInExam()) {
+				CallResult result = UploadDao.getUploadDao().uploadExamFile(
+						ExamAuth.getExamAuth().getCurrentExam_id());
+				if (result.getState()) {
+					MessageBox messageBox = new MessageBox(window.getShell(),
+							SWT.ICON_INFORMATION);
+					messageBox.setMessage("success to upload exam-"
+							+ ExamAuth.getExamAuth().getCurrentExam_id());
+					messageBox.open();
+				} else {
+					MessageBox messageBox = new MessageBox(window.getShell(),
+							SWT.ICON_INFORMATION);
+					messageBox.setMessage("fail to upload exam-"
+							+ ExamAuth.getExamAuth().getCurrentExam_id()
+							+ " (msg:" + result.getMessage() + ")");
+					messageBox.open();
+				}
+			} else {
+				MessageBox messageBox = new MessageBox(window.getShell(),
+						SWT.ICON_INFORMATION);
+				messageBox.setMessage("you are not in exam");
+				messageBox.open();
+			}
+		} else {
+			MessageBox messageBox = new MessageBox(window.getShell(),
+					SWT.ICON_INFORMATION);
+			messageBox.setMessage("Please Login first");
+			messageBox.open();
+		}
 
 	}
 
@@ -47,7 +83,6 @@ public class UploadAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		
 	}
 
 	/**

@@ -1,27 +1,16 @@
 package com.xclenter.test.ui.actions;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.sf.json.JSONObject;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.jface.dialogs.MessageDialog;
 
-import com.xclenter.test.controller.CallResult;
-import com.xclenter.test.controller.LoginController;
-import com.xclenter.test.ui.dialog.LoginDialog;
-import com.xclenter.test.util.HttpCommon;
-import com.xclenter.test.util.ServerInfo;
-import com.xclenter.test.util.action.ActionAuth;
-import com.xclenter.test.util.action.ActionUtil;
-import com.xclenter.test.util.saveFile.SaveFileUtil;
+import com.xclenter.test.dao.CallResult;
+import com.xclenter.test.dao.LoginDao;
+import com.xclenter.test.util.action.ExamAuth;
+import com.xclenter.test.util.action.LoginAuth;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -34,13 +23,13 @@ import com.xclenter.test.util.saveFile.SaveFileUtil;
 public class LogoutAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 
-	private LoginController loginDao;
+	private LoginDao loginDao;
 
 	/**
 	 * The constructor.
 	 */
 	public LogoutAction() {
-		loginDao = LoginController.getLoginDao();
+		loginDao = LoginDao.getLoginDao();
 	}
 
 	/**
@@ -50,19 +39,25 @@ public class LogoutAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		if (!ActionAuth.isLogin()) {
+		if (!LoginAuth.isLogin()) {
 			MessageBox messagebox = new MessageBox(window.getShell(),
 					SWT.ICON_INFORMATION);
 			messagebox
 					.setMessage(" you have logged out.  no need to do it again");
 			messagebox.open();
 		} else {
-			String username = ActionAuth.getUsername();
+			String username = LoginAuth.getUsername();
 			CallResult logoutResult = loginDao.logout();
 
 			MessageBox messagebox = new MessageBox(window.getShell(),
 					SWT.ICON_INFORMATION);
 			if (logoutResult.getState()) {
+				/*
+				 * ÔÚµÇ³öµÄÊ±ºò ×¢Ïú¿¼ÊÔ×´Ì¬ºÍµÇÂ½×´Ì¬
+				 */
+				LoginAuth.saveUser_key("");
+				LoginAuth.changeLoginState(false, "");
+				ExamAuth.getExamAuth().setCurrentExam(null);
 				messagebox.setMessage(username
 						+ " : you have logged out successfully. ");
 			} else {

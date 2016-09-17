@@ -10,9 +10,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 
+import com.xclenter.test.dao.FileDao;
 import com.xclenter.test.log.DocumentDeltaRecorder;
 import com.xclenter.test.util.ResourceUtil;
-import com.xclenter.test.util.saveFile.SaveFileUtil;
+import com.xclenter.test.util.file.SaveFileUtil;
 
 public class DeltaPrinter implements IResourceDeltaVisitor {
 
@@ -64,7 +65,7 @@ public class DeltaPrinter implements IResourceDeltaVisitor {
 				String fileExtension = res.getFileExtension();
 				if (fileExtension != null
 						&& fileExtensionFilter.contains(fileExtension)) {
-					String fileRelatePath = SaveFileUtil.saveMiddleFile(res
+					String fileRelatePath = FileDao.saveMiddleFile(res
 							.getFullPath().toString(), res.getLocation()
 							.toOSString());
 					log("added", res.getFullPath().toString(), resouceType,
@@ -92,7 +93,7 @@ public class DeltaPrinter implements IResourceDeltaVisitor {
 					String fileExtension = res.getFileExtension();
 					if (fileExtension != null
 							&& fileExtensionFilter.contains(fileExtension)) {
-						String fileRelatePath = SaveFileUtil.saveMiddleFile(res
+						String fileRelatePath = FileDao.saveMiddleFile(res
 								.getFullPath().toString(), res.getLocation()
 								.toOSString());
 						log("changed", res.getFullPath().toString(),

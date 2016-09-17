@@ -1,5 +1,11 @@
 package com.xclenter.test.ui.actions;
 
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -9,7 +15,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.xclenter.test.ui.dialog.LoginDialog;
 import com.xclenter.test.util.action.ActionUtil;
-import com.xclenter.test.util.saveFile.SaveFileUtil;
+import com.xclenter.test.util.file.SaveFileUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -36,8 +42,7 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		
-        
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 	}
 
 	/**

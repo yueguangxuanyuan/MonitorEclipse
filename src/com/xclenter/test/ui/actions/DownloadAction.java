@@ -1,8 +1,20 @@
 package com.xclenter.test.ui.actions;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.cdt.core.CCorePlugin;
+import org.eclipse.cdt.core.model.CoreModel;
+import org.eclipse.cdt.core.settings.model.CSourceEntry;
+import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
+import org.eclipse.cdt.core.settings.model.ICProjectDescription;
+import org.eclipse.cdt.core.settings.model.ICSourceEntry;
+import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -10,10 +22,14 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import com.xclenter.test.controller.DownloadController;
-import com.xclenter.test.controller.TaskModel;
+import com.xclenter.test.dao.CallResult;
+import com.xclenter.test.dao.DownloadDao;
+import com.xclenter.test.model.ExamModel;
+import com.xclenter.test.model.QuestionModel;
+import com.xclenter.test.model.TaskModel;
 import com.xclenter.test.ui.dialog.TaskSelectDialog;
-import com.xclenter.test.util.action.ActionAuth;
+import com.xclenter.test.util.action.ExamAuth;
+import com.xclenter.test.util.action.LoginAuth;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -25,12 +41,13 @@ import com.xclenter.test.util.action.ActionAuth;
  */
 public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
-	
+	private DownloadDao downloadDao;
+
 	/**
 	 * The constructor.
 	 */
 	public DownloadAction() {
-	
+		downloadDao = DownloadDao.getDownloadDao();
 	}
 
 	/**
@@ -41,20 +58,79 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void run(IAction action) {
 		/*
-		 * we should check  if they have taken one of task
+		 * we should check if they have taken one of task
 		 */
-		if(!ActionAuth.isLogin()){
-			MessageBox messageBox = new MessageBox(window.getShell(),SWT.ICON_INFORMATION);
+		if (!LoginAuth.isLogin()) {
+			MessageBox messageBox = new MessageBox(window.getShell(),
+					SWT.ICON_INFORMATION);
 			messageBox.setMessage("Please Login first");
 			messageBox.open();
-		}else{
-			List<TaskModel> taskModel = DownloadController.getAvailable_tasks();
-			
-			TaskSelectDialog taskSelectDialog = new TaskSelectDialog(window.getShell(), new HashSet<String>());
-			
-			taskSelectDialog.open();
+		} else if (ExamAuth.getExamAuth().isInExam()) {
+			MessageBox messageBox = new MessageBox(window.getShell(),
+					SWT.ICON_INFORMATION);
+			messageBox
+					.setMessage("You have In exam."
+							+ ExamAuth.getExamAuth().getCurrentExam_id()
+							+ " (you need log out to attend another exam.Dont forget to summit your work)");
+			messageBox.open();
+		} else {
+			CallResult result = downloadDao.getAvailable_tasks();
+			if (result.getState()) {
+				List<TaskModel> taskModel = (List<TaskModel>) result.getData();
+				TaskSelectDialog taskSelectDialog = new TaskSelectDialog(
+						window.getShell(), taskModel) {
+					@Override
+					protected void doAfterSelect(TaskModel tablemodel) {
+						// TODO Auto-generated method stub
+						CallResult result = downloadDao
+								.getQuestionsOfExam(tablemodel.getId());
+
+						if (result.getState()) {
+							ExamModel examModel = new ExamModel(
+									tablemodel.getId(), tablemodel.getName(),
+									tablemodel.getBegin_time(),
+									tablemodel.getEnd_time(),
+									(List<QuestionModel>) result.getData());
+							ExamAuth.getExamAuth().setCurrentExam(examModel);
+							setUpExamEnvironment();
+							
+							super.okPressed();
+						} else {
+							MessageBox messageBox = new MessageBox(
+									window.getShell(), SWT.ICON_INFORMATION);
+							messageBox.setMessage(result.getMessage());
+							messageBox.open();
+						}
+					}
+				};
+				taskSelectDialog.open();
+			} else {
+				MessageBox messageBox = new MessageBox(window.getShell(),
+						SWT.ICON_INFORMATION);
+				messageBox.setMessage(result.getMessage());
+				messageBox.open();
+			}
 		}
-        
+
+	}
+
+	private void setUpExamEnvironment() {
+		IWorkspaceRoot workspaceroot = ResourcesPlugin.getWorkspace().getRoot();
+		HashMap<String, String> questionidToProjectNameMap = ExamAuth
+				.getExamAuth().getQuestionidToProjectNameMap();
+		try {
+			IProject examInfoProject = workspaceroot.getProject("ExamInfo");
+			if(examInfoProject != null && examInfoProject.exists()){
+					examInfoProject.delete(true, null);
+			}
+			examInfoProject.create(null);
+			examInfoProject.open(null);
+			
+			String examInfoProjectPath = examInfoProject.getFullPath().toOSString();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -65,7 +141,7 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		
+
 	}
 
 	/**

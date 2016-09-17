@@ -1,10 +1,5 @@
 package com.xclenter.test.ui.actions;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.sf.json.JSONObject;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -12,16 +7,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.jface.dialogs.MessageDialog;
 
-import com.xclenter.test.controller.CallResult;
-import com.xclenter.test.controller.LoginController;
+import com.xclenter.test.dao.CallResult;
+import com.xclenter.test.dao.FileDao;
+import com.xclenter.test.dao.LoginDao;
+import com.xclenter.test.dao.New_Login;
 import com.xclenter.test.ui.dialog.LoginDialog;
-import com.xclenter.test.util.HttpCommon;
-import com.xclenter.test.util.ServerInfo;
-import com.xclenter.test.util.action.ActionAuth;
-import com.xclenter.test.util.action.ActionUtil;
-import com.xclenter.test.util.saveFile.SaveFileUtil;
+import com.xclenter.test.util.action.LoginAuth;
+import com.xclenter.test.util.file.SaveFileUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -34,13 +27,13 @@ import com.xclenter.test.util.saveFile.SaveFileUtil;
 public class LoginAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 
-	private LoginController loginDao;
+	private LoginDao loginDao;
 
 	/**
 	 * The constructor.
 	 */
 	public LoginAction() {
-		loginDao = LoginController.getLoginDao();
+		loginDao = LoginDao.getLoginDao();
 	}
 
 	/**
@@ -50,11 +43,11 @@ public class LoginAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		if (ActionAuth.isLogin()) {
+		if (LoginAuth.isLogin()) {
 			MessageBox messagebox = new MessageBox(window.getShell(),
 					SWT.ICON_INFORMATION);
 			messagebox
-					.setMessage(ActionAuth.getUsername()
+					.setMessage(LoginAuth.getUsername()
 							+ " . you have logged in. if you want to change user, you need to log out firstly");
 			messagebox.open();
 		} else {
@@ -69,8 +62,16 @@ public class LoginAction implements IWorkbenchWindowActionDelegate {
 
 					String message;
 					if (login_result.getState()) {
+						New_Login new_login = (New_Login) login_result.getData();
+						if (new_login.isNew_login()) {
+							FileDao.clearLegacy();
+							LoginAuth.saveUser_key(new_login.getUser_key());
+						} else {
+							login_result.setMessage("continue");
+						}
+						LoginAuth.changeLoginState(true, account);
 						message = "welcome , Mr/Miss "
-								+ ActionAuth.getUsername();
+								+ LoginAuth.getUsername();
 						if(login_result.getMessage() != null){
 							message += "(" + login_result.getMessage() + ")";
 						}

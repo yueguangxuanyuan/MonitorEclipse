@@ -1,7 +1,5 @@
 package com.xclenter.test.ui.startup;
 
-import net.sf.json.JSONObject;
-
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
@@ -13,25 +11,21 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.console.ConsolePlugin;
 
+import com.xclenter.test.dao.FileDao;
 import com.xclenter.test.listener.debugAction.DebugEventSetListener;
 import com.xclenter.test.listener.developAction.ExecutionListener;
 import com.xclenter.test.listener.developAction.ResourceChangeListener;
 import com.xclenter.test.listener.developAction.build.ConsoleListener;
 import com.xclenter.test.listener.ui.WindowListener;
-import com.xclenter.test.util.HttpCommon;
-import com.xclenter.test.util.ServerInfo;
-import com.xclenter.test.util.action.ActionAuth;
-import com.xclenter.test.util.action.ActionUtil;
 import com.xclenter.test.util.addlistener.AddDocumentListenerUtil;
 import com.xclenter.test.util.addlistener.UIAddListenerUtil;
-import com.xclenter.test.util.saveFile.SaveFileUtil;
 
 public class Startup implements IStartup {
 	/*
 	 * 初始化插件运行环境
 	 */
 	private void setupEnvironment() {
-		SaveFileUtil.initSaveContext();
+		FileDao.initSaveContext();
 		System.setProperty("openlog4j", "true");
 		System.setProperty("em_isLogin","false");
 	}

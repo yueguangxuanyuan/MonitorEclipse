@@ -1,79 +1,104 @@
 package com.xclenter.test.ui.dialog;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
-public class TaskSelectDialog extends TitleAreaDialog {
-	Set<String > tasks;
-	
+import com.xclenter.test.model.TaskModel;
+
+public abstract class TaskSelectDialog extends TitleAreaDialog {
+	List<TaskModel> tasks;
+
 	public TaskSelectDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
-	public TaskSelectDialog(Shell parentShell , Set<String> tasks){
+
+	public TaskSelectDialog(Shell parentShell, List<TaskModel> tasks) {
 		super(parentShell);
-		
 		this.tasks = tasks;
 	}
 
-	private Combo subjectCombo;
+	private Table taskTable;
+
+	@Override
+	public void create() {
+		// TODO Auto-generated method stub
+		super.create();
+		setTitle("Download");
+		setMessage("choose a task");
+	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		GridLayout layout = new GridLayout(2 , true);
-		GridData grid = new GridData(SWT.FILL , SWT.FILL , true , true);
-	    grid.widthHint = 150;
-	    grid.heightHint = 250;
+		GridLayout layout = new GridLayout(1, true);
+		GridData grid = new GridData(SWT.FILL, SWT.FILL, true, true);
 		container.setLayoutData(grid);
 		container.setLayout(layout);
 
-		createSubjectCombo(container);
+		createTaskTable(container);
 		return area;
 	}
 
-	private void createSubjectCombo(Composite container) {
+	private void createTaskTable(Composite container) {
 		// combine label with combo
 		Composite cont = new Composite(container, SWT.NONE);
 		cont.setLayoutData(new GridData(GridData.FILL_BOTH));
-		GridLayout layout = new GridLayout(1 , true);
-		GridData grid = new GridData(SWT.FILL , SWT.FILL , true , true);
+		GridLayout layout = new GridLayout(1, false);
+		GridData grid = new GridData(SWT.FILL, SWT.FILL, true, true);
 		cont.setLayoutData(grid);
 		cont.setLayout(layout);
-		
+
 		// create label
 		Label lbSubject = new Label(cont, SWT.NONE);
 		lbSubject.setText("ÇëÑ¡Ôñ×÷Òµ/¿¼ÊÔ");
-		
-		// create combo
+
 		GridData dataSubject = new GridData();
 		dataSubject.grabExcessHorizontalSpace = true;
-		dataSubject.widthHint = 180;
-		dataSubject.heightHint = 300;
-		
-		subjectCombo = new Combo(cont, 
-            SWT.DROP_DOWN | SWT.MULTI | 
-            SWT.V_SCROLL | SWT.H_SCROLL);
-	
-		setComboContents(subjectCombo , new TreeSet<String>(tasks));
-		subjectCombo.select(0);
+		dataSubject.horizontalAlignment = GridData.FILL;
 
-		subjectCombo.setLayoutData(dataSubject);
+		taskTable = new Table(cont, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL
+				| SWT.H_SCROLL|SWT.FULL_SELECTION);
+		taskTable.setLayoutData(dataSubject);
+
+		setTableContents(taskTable, tasks);
+
+		taskTable.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent event) {
+				TableItem tableItem = (TableItem) event.item;
+				TaskModel selectedTask = new TaskModel(tableItem.getText(0),
+						tableItem.getText(1), tableItem.getText(2), tableItem
+								.getText(3), false);
+				doAfterSelect(selectedTask);
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 	}
-
+	
+	protected abstract void doAfterSelect(TaskModel tablemodel);
+	
 	@Override
 	protected boolean isResizable() {
 		return true;
@@ -90,18 +115,32 @@ public class TaskSelectDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 
-	
-	public void setComboContents(Combo combo , TreeSet<String> data) {
-	    combo.removeAll();
-	    // sort the set
-	    data.comparator();
-	    
-	    Iterator<String> ite = data.iterator();
-	    
-	    while(ite.hasNext()){
-	    	combo.add(ite.next().toString());
-	    }
+	public void setTableContents(Table table, List<TaskModel> data) {
+		table.removeAll();
 
+		table.setHeaderVisible(true);
+
+		TableColumn idColumn = new TableColumn(table, SWT.NONE);
+		idColumn.setText("id");
+		TableColumn nameColumn = new TableColumn(table, SWT.NONE);
+		nameColumn.setText("name");
+		TableColumn start_timeColumn = new TableColumn(table, SWT.NONE);
+		start_timeColumn.setText("begin_time");
+		TableColumn end_timeColumn = new TableColumn(table, SWT.NONE);
+		end_timeColumn.setText("end_time");
+
+		for (TaskModel item : data) {
+			TableItem rowItem = new TableItem(table, SWT.NONE);
+			rowItem.setText(0, item.getId());
+			rowItem.setText(1, item.getName());
+			rowItem.setText(2, item.getBegin_time());
+			rowItem.setText(3, item.getEnd_time());
+		}
+
+		final TableColumn[] columns = table.getColumns();
+		for (TableColumn column : columns) {
+			column.pack();
+		}
 	}
-	
+
 }
