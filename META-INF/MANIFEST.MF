@@ -15,13 +15,13 @@ Bundle-ClassPath: .,
  lib/commons-beanutils.jar,
  lib/ezmorph-1.0.6.jar,
  lib/commons-collections-3.2.1.jar,
- lib/keyczar-0.71h.jar,
  lib/org.json.jar,
  lib/httpmime-4.5.2.jar,
  lib/fluent-hc-4.5.2.jar,
  lib/jna-4.1.0.jar,
  lib/jna-platform-4.1.0.jar,
- lib/httpclient-win-4.5.2.jar
+ lib/httpclient-win-4.5.2.jar,
+ lib/javabase64-1.2.jar
 Bundle-Activator: com.xclenter.test.Activator
 Bundle-Vendor: XCLENTER
 Export-Package: com.xclenter.test;uses:="org.eclipse.ui.plugin,org.osgi.framework",

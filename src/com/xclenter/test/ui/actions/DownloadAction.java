@@ -92,9 +92,22 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 									tablemodel.getEnd_time(),
 									(List<QuestionModel>) result.getData());
 							ExamAuth.getExamAuth().setCurrentExam(examModel);
-							setUpExamEnvironment();
-							
-							super.okPressed();
+							CallResult setResult = setUpExamEnvironment();
+							if (setResult.getState()) {
+								MessageBox messageBox = new MessageBox(
+										window.getShell(), SWT.ICON_INFORMATION);
+								messageBox.setMessage("exam-"
+										+ ExamAuth.getExamAuth()
+												.getCurrentExam_id()
+										+ " has already been set up");
+								messageBox.open();
+								super.okPressed();
+							} else {
+								MessageBox messageBox = new MessageBox(
+										window.getShell(), SWT.ICON_INFORMATION);
+								messageBox.setMessage(setResult.getMessage());
+								messageBox.open();
+							}
 						} else {
 							MessageBox messageBox = new MessageBox(
 									window.getShell(), SWT.ICON_INFORMATION);
@@ -114,22 +127,27 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 
 	}
 
-	private void setUpExamEnvironment() {
+	private CallResult setUpExamEnvironment() {
 		IWorkspaceRoot workspaceroot = ResourcesPlugin.getWorkspace().getRoot();
 		HashMap<String, String> questionidToProjectNameMap = ExamAuth
 				.getExamAuth().getQuestionidToProjectNameMap();
 		try {
 			IProject examInfoProject = workspaceroot.getProject("ExamInfo");
-			if(examInfoProject != null && examInfoProject.exists()){
-					examInfoProject.delete(true, null);
+			if (examInfoProject != null && examInfoProject.exists()) {
+				examInfoProject.delete(true, null);
 			}
 			examInfoProject.create(null);
+			String examInfoProjectPath = examInfoProject.getLocation()
+					.toOSString();
+			CallResult result = downloadDao.unzipQuestionDescription(
+					examInfoProjectPath, ExamAuth.getExamAuth()
+							.getCurrentExam_id(), questionidToProjectNameMap);
 			examInfoProject.open(null);
-			
-			String examInfoProjectPath = examInfoProject.getFullPath().toOSString();
+			return result;
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return new CallResult(false, "error happened");
 		}
 	}
 

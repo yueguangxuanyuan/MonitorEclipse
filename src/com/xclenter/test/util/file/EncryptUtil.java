@@ -1,34 +1,33 @@
 package com.xclenter.test.util.file;
 
-import java.io.IOException;
-import java.net.URL;
+import it.sauronsoftware.base64.Base64;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
-import org.keyczar.Crypter;
-import org.keyczar.exceptions.KeyczarException;
-import org.osgi.framework.Bundle;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
-import com.xclenter.test.Activator;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class EncryptUtil {
 	private static EncryptUtil encryptUtil;
+	/**
+	 * 密钥算法
+	 */
+	private static final String KEY_ALGORITHM = "AES";
 
-	private Crypter crypter;
+	private static final String DEFAULT_CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
+	
+	private static String key = "hYOTz5Il8IzWQSVk";
 
 	private EncryptUtil() {
-		try {
-			Bundle bundle = Activator.getDefault().getBundle();    
-			URL url = bundle.getResource("/encrypt_key");  
-			String fileURL = FileLocator.toFileURL(url).getPath();
-			crypter = new Crypter(fileURL);
-		} catch (KeyczarException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public static EncryptUtil getEncryptUtil() {
@@ -39,57 +38,57 @@ public class EncryptUtil {
 		return encryptUtil;
 	}
 
-	public String encryptString(String input) {
-		String encrptedString = null;
+	
+	public byte[] decrypt(String input) {
+		try {
+			byte[] inputstream = input.getBytes("ISO-8859-1");
+			inputstream = Base64.decode(inputstream);
+			byte[] iv = Arrays.copyOfRange(inputstream, 0, 16);
 
-		if (crypter != null && input != null) {
-			try {
-				encrptedString = crypter.encrypt(input);
-			} catch (KeyczarException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			byte[] data = Arrays.copyOfRange(inputstream, 16,
+					inputstream.length);
+			return decrypt(data, key.getBytes("ISO-8859-1"), iv);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return encrptedString;
+		return null;
 	}
-	
-	public byte[] encryptString(byte[] input) {
-		byte[] encrptedString = null;
 
-		if (crypter != null && input != null) {
-			try {
-				encrptedString = crypter.encrypt(input);
-			} catch (KeyczarException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return encrptedString;
+	private Key toKey(byte[] key) {
+		// 生成密钥
+		return new SecretKeySpec(key, KEY_ALGORITHM);
 	}
-	
-	public String decryptString(String input) {
-		String decryptedString = null;
-		if (crypter != null && input != null) {
-			try {
-				decryptedString = crypter.decrypt(input);
-			} catch (KeyczarException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+	public byte[] decrypt(byte[] data, byte[] key, byte[] iv) {
+		// 实例化
+		Cipher cipher;
+		try {
+			cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);
+			// 使用密钥初始化，设置为解密模式
+			cipher.init(Cipher.DECRYPT_MODE, toKey(key),
+					new IvParameterSpec(iv));
+			// 执行操作
+			return cipher.doFinal(data);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidAlgorithmParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return decryptedString;
-	}
-	
-	public byte[] decryptString(byte[] input) {
-		byte[] decryptedString = null;
-		if (crypter != null && input != null) {
-			try {
-				decryptedString = crypter.decrypt(input);
-			} catch (KeyczarException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return decryptedString;
+		return new byte[0];
 	}
 }

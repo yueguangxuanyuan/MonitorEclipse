@@ -65,7 +65,7 @@ public class UploadDao {
 		if(questionidToProjectNameMap != null){
 			for(String qid : questionidToProjectNameMap.keySet()){
 				IProject project= workspace.getProject(questionidToProjectNameMap.get(qid));
-				if(project != null){
+				if(project != null && project.exists()){
 					projectFiles.add(new File(project.getLocationURI().getPath()));
 				}
 			}
@@ -77,6 +77,17 @@ public class UploadDao {
 		
 		JSONObject feedBack = HttpCommon.getHttpCommon()
 				.getJsonResponseWithParams(url, params,filesToUpload);
+		//«Â¿Ìtmp
+		{
+			File logzipfile = new File(logzipPath);
+			if(logzipfile.exists()){
+				logzipfile.delete();
+			}
+			File projectzipfile = new File(projectzipPath);
+			if(projectzipfile.exists()){
+				projectzipfile.delete();
+			}
+		}
 		if (feedBack != null) {
 			String result;
 			try {

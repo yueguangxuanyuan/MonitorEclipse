@@ -1,8 +1,11 @@
 package com.xclenter.test.util.file;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.FileChannel;
 
 public class CopyUtil {
 
@@ -86,4 +89,24 @@ public class CopyUtil {
 	        }
 	    }
 
+	    public static void copyFile(String srcFilename, String desFilename) {
+			// Create channel on the source
+			try {
+				FileChannel srcChannel = new FileInputStream(srcFilename).getChannel();
+				// Create channel on the destination
+				FileChannel dstChannel = new FileOutputStream(desFilename)
+						.getChannel();
+				// Copy file contents from source to destination
+			    dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+				// Close the channels
+				srcChannel.close();
+				dstChannel.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 }

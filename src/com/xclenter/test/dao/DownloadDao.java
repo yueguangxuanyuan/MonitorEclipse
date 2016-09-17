@@ -1,7 +1,12 @@
 package com.xclenter.test.dao;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +19,12 @@ import com.xclenter.test.model.QuestionModel;
 import com.xclenter.test.model.TaskModel;
 import com.xclenter.test.util.HttpCommon;
 import com.xclenter.test.util.ServerInfo;
+import com.xclenter.test.util.file.CopyUtil;
 import com.xclenter.test.util.file.DeleteUtil;
+import com.xclenter.test.util.file.EncryptUtil;
 import com.xclenter.test.util.file.FileUtil;
 import com.xclenter.test.util.file.SaveFileUtil;
+import com.xclenter.test.util.file.ZipUtil;
 
 public class DownloadDao {
 
@@ -113,11 +121,9 @@ public class DownloadDao {
 							String name = nameList.getString(i);
 							String encryptedQuestion = questionList
 									.getString(i);
-							// System.out.println(Arrays.toString(
-							// encryptedQuestion.getBytes()));
 							saveQuestionOfExam(eid, question_id, name,
 									encryptedQuestion);
-							questions.add(new QuestionModel(question_id,name));
+							questions.add(new QuestionModel(question_id, name));
 						}
 						data = questions;
 						state = true;
@@ -139,12 +145,41 @@ public class DownloadDao {
 			message = "error encoding";
 			e.printStackTrace();
 		}
-		return new CallResult(state, message,data);
+		return new CallResult(state, message, data);
+	}
+
+	public CallResult unzipQuestionDescription(String projectPath, String eid,
+			HashMap<String, String> qidTopnameMap) {
+		boolean state = false;
+		String message = "";
+		String tmpFilePath = FileUtil.tmpFileSaveRootPath + File.separator
+				+ "unzipFile";
+		File tmpFileFolder = new File(tmpFilePath);
+		tmpFileFolder.mkdirs();
+		DeleteUtil.delAllFile(tmpFilePath);
+
+		String zipFileRootPath = FileUtil.downloadFileSaveRootPath
+				+ File.separator + eid;
+		for (String qid : qidTopnameMap.keySet()) {
+			String zipFilePath = zipFileRootPath + File.separator + qid
+					+ ".zip";
+			ZipUtil.unZipFiles(new File(zipFilePath), tmpFilePath);
+			File unzipedFile = tmpFileFolder.listFiles()[0];
+			String questionDescriptionPath = unzipedFile.getAbsolutePath()
+					+ File.separator + "question" + File.separator
+					+ "description";
+			String targetFilePath = projectPath + File.separator + "Q" + qid
+					+ File.separator + "description";
+			CopyUtil.CopySingleFileTo(questionDescriptionPath, targetFilePath);
+			
+			DeleteUtil.delAllFile(tmpFilePath);
+		}
+		state = true;
+		return new CallResult(state, message);
 	}
 
 	private void clearExamDownloadSpace(String eid) {
-		String path = FileUtil.downloadFileSaveRootPath + File.separator
-				+ eid;
+		String path = FileUtil.downloadFileSaveRootPath + File.separator + eid;
 		File examSaveRootPath = new File(path);
 		if (!examSaveRootPath.exists()) {
 			examSaveRootPath.mkdirs();
@@ -154,13 +189,11 @@ public class DownloadDao {
 
 	private void saveQuestionOfExam(String eid, String question_id,
 			String name, String question) throws UnsupportedEncodingException {
-		String path = FileUtil.downloadFileSaveRootPath + File.separator
-				+ eid;
-		path += File.separator + question_id + "_" + name;
-//		String decryptedQuestion = EncryptUtil.getEncryptUtil().decryptString(
-//				question);
+		String path = FileUtil.downloadFileSaveRootPath + File.separator + eid;
+		byte[] decryptedQuestion = EncryptUtil.getEncryptUtil().decrypt(
+				question);
 		SaveFileUtil.saveFileWithByte(path + File.separator + question_id
-				+ ".zip", question.getBytes("ISO-8859-1"));
+				+ ".zip", decryptedQuestion);
 
 	}
 }
