@@ -3,6 +3,7 @@ package com.xclenter.test.dao;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,15 +40,31 @@ public class UploadDao {
 		return uploadDao;
 	}
 
-	public CallResult uploadExamFile(String exam_id) {
+	public CallResult uploadExamFile(String exam_id,JSONArray scoreJSONArray) {
 		boolean state = false;
 		String message = null;
 
 		String url = "http://" + ServerInfo.serverIP
-				+ "/exam/upload_exam_log_project/";
+				+ "/exam/upload_exam_project_and_score/";
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("eid", exam_id);
 		HashMap<String,String> filesToUpload = new HashMap<>(); 
+		ArrayList<String> qidList = new ArrayList<>();
+		ArrayList<String> scoreList = new ArrayList<>();
+		try {
+			for(int i = 0 ; i < scoreJSONArray.length(); i++){
+				JSONObject scoreJSON = scoreJSONArray.getJSONObject(i);
+				qidList.add(scoreJSON.getString("qid"));
+				scoreList.add(scoreJSON.getString("score"));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			message = "cannot get score";
+			return new CallResult(state,message);
+		}
+		params.put("qid", Arrays.toString(qidList.toArray(new String[0])));
+		params.put("score", Arrays.toString(scoreList.toArray(new String[0])));
 		/*
 		 * 压缩日志文件夹
 		 */

@@ -8,8 +8,10 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.json.JSONArray;
 
 import com.xclenter.test.dao.CallResult;
+import com.xclenter.test.dao.TestDao;
 import com.xclenter.test.dao.UploadDao;
 import com.xclenter.test.ui.dialog.LoginDialog;
 import com.xclenter.test.util.action.ActionUtil;
@@ -44,20 +46,36 @@ public class UploadAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		if (LoginAuth.isLogin()) {
 			if (ExamAuth.getExamAuth().isInExam()) {
-				CallResult result = UploadDao.getUploadDao().uploadExamFile(
-						ExamAuth.getExamAuth().getCurrentExam_id());
-				if (result.getState()) {
-					MessageBox messageBox = new MessageBox(window.getShell(),
-							SWT.ICON_INFORMATION);
-					messageBox.setMessage("success to upload exam-"
-							+ ExamAuth.getExamAuth().getCurrentExam_id());
-					messageBox.open();
+				CallResult calculateScoreResult = TestDao.getTestDao()
+						.getQuestionScore(
+								ExamAuth.getExamAuth().getCurrentExam_id(),
+								ExamAuth.getExamAuth()
+										.getQuestionOfCurrentExam());
+				if (calculateScoreResult.getState()) {
+					JSONArray scoreJSONArray = (JSONArray) calculateScoreResult.getData();
+					CallResult result = UploadDao.getUploadDao()
+							.uploadExamFile(
+									ExamAuth.getExamAuth().getCurrentExam_id(),scoreJSONArray);
+					if (result.getState()) {
+						MessageBox messageBox = new MessageBox(
+								window.getShell(), SWT.ICON_INFORMATION);
+						messageBox.setMessage("success to upload exam-"
+								+ ExamAuth.getExamAuth().getCurrentExam_id());
+						messageBox.open();
+					} else {
+						MessageBox messageBox = new MessageBox(
+								window.getShell(), SWT.ICON_INFORMATION);
+						messageBox.setMessage("fail to upload exam-"
+								+ ExamAuth.getExamAuth().getCurrentExam_id()
+								+ " (msg:" + result.getMessage() + ")");
+						messageBox.open();
+					}
 				} else {
 					MessageBox messageBox = new MessageBox(window.getShell(),
 							SWT.ICON_INFORMATION);
-					messageBox.setMessage("fail to upload exam-"
-							+ ExamAuth.getExamAuth().getCurrentExam_id()
-							+ " (msg:" + result.getMessage() + ")");
+					messageBox
+							.setMessage("error happened when calculate scores.("
+									+ calculateScoreResult.getMessage() + ")");
 					messageBox.open();
 				}
 			} else {

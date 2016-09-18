@@ -7,10 +7,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.xclenter.test.model.QuestionModel;
 import com.xclenter.test.util.action.ExamAuth;
@@ -117,7 +121,7 @@ public class TestDao {
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}finally{
+				} finally {
 					DeleteUtil.delAllFile(tmpFilePath);
 					DeleteUtil.delAllFile(zipFileRootPath);
 				}
@@ -154,5 +158,48 @@ public class TestDao {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public CallResult getQuestionScore(String eid, List<QuestionModel> questions) {
+		boolean state = false;
+		String message = "";
+		Object data = null;
+		try {
+			JSONArray scoreJSONArray = new JSONArray();
+			JSONArray errorMessageJSONArray = new JSONArray();
+			for (QuestionModel question : questions) {
+				CallResult result = testQuestion(eid, question);
+				if (result.getState()) {
+					JSONObject scoreJSON = new JSONObject();
+					scoreJSON.put("qid", question.getQid());
+					TestCasePassResult tcpr = (TestCasePassResult) result.getData();
+					scoreJSON.put("score", calculateScore(tcpr));
+					scoreJSONArray.put(scoreJSON);
+				} else {
+					JSONObject errorMessageJSON = new JSONObject();
+					errorMessageJSON.put("qid", question.getQid());
+					errorMessageJSON.put("error_msg", result.getMessage());
+					errorMessageJSONArray.put(errorMessageJSON);
+				}
+			}
+			if(errorMessageJSONArray.length() == 0){
+				state = true;
+			}
+			message  = errorMessageJSONArray.toString();
+			data = scoreJSONArray;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			message = "json error";
+			e.printStackTrace();
+		}
+		return new CallResult(state, message, data);
+	}
+	
+	private String calculateScore(TestCasePassResult tcpr){
+		double score = 0;
+		if(tcpr.getCaseCount() != 0){
+			score = tcpr.getPassedCaseCount()/((double)tcpr.getCaseCount());
+		}
+		return String.format("%.3f", score);
 	}
 }
