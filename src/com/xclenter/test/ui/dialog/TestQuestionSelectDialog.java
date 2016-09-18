@@ -17,28 +17,31 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import com.xclenter.test.model.TaskModel;
+import com.xclenter.test.model.QuestionModel;
 
-public abstract class TaskSelectDialog extends TitleAreaDialog {
-	List<TaskModel> tasks;
+public abstract class TestQuestionSelectDialog extends TitleAreaDialog {
+	List<QuestionModel> questions;
+	public String examid;
 
-	public TaskSelectDialog(Shell parentShell) {
+	public TestQuestionSelectDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
-	public TaskSelectDialog(Shell parentShell, List<TaskModel> tasks) {
+	public TestQuestionSelectDialog(Shell parentShell, String eid,
+			List<QuestionModel> questions) {
 		super(parentShell);
-		this.tasks = tasks;
+		this.examid = eid;
+		this.questions = questions;
 	}
 
-	private Table taskTable;
+	private Table questionTable;
 
 	@Override
 	public void create() {
 		// TODO Auto-generated method stub
 		super.create();
-		setTitle("Download");
-		setMessage("choose a task");
+		setTitle("Test");
+		setMessage("choose a question to test");
 	}
 
 	@Override
@@ -66,40 +69,21 @@ public abstract class TaskSelectDialog extends TitleAreaDialog {
 
 		// create label
 		Label lbSubject = new Label(cont, SWT.NONE);
-		lbSubject.setText("请选择作业/考试");
+		lbSubject.setText("请选择需要测试的问题");
 
 		GridData dataSubject = new GridData();
 		dataSubject.grabExcessHorizontalSpace = true;
 		dataSubject.horizontalAlignment = GridData.FILL;
 
-		taskTable = new Table(cont, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL
-				| SWT.H_SCROLL|SWT.FULL_SELECTION);
-		taskTable.setLayoutData(dataSubject);
+		questionTable = new Table(cont, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL
+				| SWT.H_SCROLL | SWT.FULL_SELECTION);
+		questionTable.setLayoutData(dataSubject);
 
-		setTableContents(taskTable, tasks);
-
-//		taskTable.addSelectionListener(new SelectionListener() {
-//
-//			@Override
-//			public void widgetDefaultSelected(SelectionEvent event) {
-//				TableItem tableItem = (TableItem) event.item;
-//				TaskModel selectedTask = new TaskModel(tableItem.getText(0),
-//						tableItem.getText(1), tableItem.getText(2), tableItem
-//								.getText(3), false);
-//				doAfterSelect(selectedTask);
-//			}
-//
-//			@Override
-//			public void widgetSelected(SelectionEvent event) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//		});
+		setTableContents(questionTable, questions);
 	}
-	
-	protected abstract void doAfterSelect(TaskModel tablemodel);
-	
+
+	protected abstract void doAfterSelect(QuestionModel questionmodel);
+
 	@Override
 	protected boolean isResizable() {
 		return true;
@@ -107,24 +91,21 @@ public abstract class TaskSelectDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-		TableItem[] items = taskTable.getSelection();
-		if(items != null && items.length == 1){
+		TableItem[] items = questionTable.getSelection();
+		if (items != null && items.length == 1) {
 			TableItem tableItem = items[0];
-			TaskModel selectedTask = new TaskModel(tableItem.getText(0),
-					tableItem.getText(1), tableItem.getText(2), tableItem
-							.getText(3), false);
-			doAfterSelect(selectedTask);
-			super.okPressed();
-		}else{
+			QuestionModel selectedQuestion = new QuestionModel(
+					tableItem.getText(0), tableItem.getText(1));
+			doAfterSelect(selectedQuestion);
+		} else {
 			MessageBox messageBox = new MessageBox(this.getShell(),
 					SWT.ICON_INFORMATION);
-			messageBox
-					.setMessage("please select one item");
+			messageBox.setMessage("please select one item");
 			messageBox.open();
 		}
 	}
 
-	public void setTableContents(Table table, List<TaskModel> data) {
+	public void setTableContents(Table table, List<QuestionModel> data) {
 		table.removeAll();
 
 		table.setHeaderVisible(true);
@@ -133,17 +114,11 @@ public abstract class TaskSelectDialog extends TitleAreaDialog {
 		idColumn.setText("id");
 		TableColumn nameColumn = new TableColumn(table, SWT.NONE);
 		nameColumn.setText("name");
-		TableColumn start_timeColumn = new TableColumn(table, SWT.NONE);
-		start_timeColumn.setText("begin_time");
-		TableColumn end_timeColumn = new TableColumn(table, SWT.NONE);
-		end_timeColumn.setText("end_time");
 
-		for (TaskModel item : data) {
+		for (QuestionModel item : data) {
 			TableItem rowItem = new TableItem(table, SWT.NONE);
-			rowItem.setText(0, item.getId());
+			rowItem.setText(0, item.getQid());
 			rowItem.setText(1, item.getName());
-			rowItem.setText(2, item.getBegin_time());
-			rowItem.setText(3, item.getEnd_time());
 		}
 
 		final TableColumn[] columns = table.getColumns();

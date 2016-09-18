@@ -1,5 +1,7 @@
 package com.xclenter.test.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -9,12 +11,21 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import com.xclenter.test.dao.CallResult;
+import com.xclenter.test.dao.TestCasePassResult;
+import com.xclenter.test.dao.TestDao;
+import com.xclenter.test.model.QuestionModel;
 import com.xclenter.test.ui.dialog.LoginDialog;
+import com.xclenter.test.ui.dialog.TestQuestionSelectDialog;
 import com.xclenter.test.util.action.ActionUtil;
+import com.xclenter.test.util.action.ExamAuth;
+import com.xclenter.test.util.action.LoginAuth;
 import com.xclenter.test.util.file.SaveFileUtil;
 
 /**
@@ -27,12 +38,12 @@ import com.xclenter.test.util.file.SaveFileUtil;
  */
 public class TestAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
-	
+
 	/**
 	 * The constructor.
 	 */
 	public TestAction() {
-	
+
 	}
 
 	/**
@@ -42,7 +53,53 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		if (!LoginAuth.isLogin()) {
+			MessageBox messageBox = new MessageBox(window.getShell(),
+					SWT.ICON_INFORMATION);
+			messageBox.setMessage("Please Login first");
+			messageBox.open();
+		} else if (ExamAuth.getExamAuth().isInExam()) {
+			List<QuestionModel> currentQuestions = ExamAuth.getExamAuth()
+					.getQuestionOfCurrentExam();
+			String eid = ExamAuth.getExamAuth().getCurrentExam_id();
+			TestQuestionSelectDialog testDialog = new TestQuestionSelectDialog(
+					window.getShell(), eid, currentQuestions) {
+				protected void doAfterSelect(QuestionModel questionmodel) {
+					// TODO Auto-generated method stub
+					CallResult callresult = TestDao.getTestDao().testQuestion(
+							examid, questionmodel);
+					if (callresult.getState()) {
+						String message = "";
+						TestCasePassResult passresult = (TestCasePassResult) callresult
+								.getData();
+						if (passresult.getCaseCount() > passresult
+								.getPassedCaseCount()) {
+							message = "fail to pass test case.";
+						} else {
+							message = "succss to pass test case.";
+						}
+						message += "(total " + passresult.getCaseCount()
+								+ " - passed "
+								+ passresult.getPassedCaseCount() + ")";
+						MessageBox messageBox = new MessageBox(
+								window.getShell(), SWT.ICON_INFORMATION);
+						messageBox.setMessage(message);
+						messageBox.open();
+					} else {
+						MessageBox messageBox = new MessageBox(getShell(),
+								SWT.ICON_INFORMATION);
+						messageBox.setMessage(callresult.getMessage());
+						messageBox.open();
+					}
+				}
+			};
+			testDialog.open();
+		} else {
+			MessageBox messageBox = new MessageBox(window.getShell(),
+					SWT.ICON_INFORMATION);
+			messageBox.setMessage("you are not in an exam");
+			messageBox.open();
+		}
 	}
 
 	/**
@@ -53,7 +110,7 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		
+
 	}
 
 	/**

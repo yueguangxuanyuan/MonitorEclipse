@@ -1,10 +1,12 @@
 package com.xclenter.test.util.file;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -68,5 +70,20 @@ public class ReadFileUtil {
 			e.printStackTrace();
 		}
 		return content;
+	}
+	
+	public static byte[] readInputStreamIntoBytes(InputStream is) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] temp = new byte[64];
+		int count = 0;
+		try {
+			while ((count = is.read(temp)) > 0) {
+				baos.write(temp, 0, count);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return baos.toByteArray();
 	}
 }

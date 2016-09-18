@@ -95,22 +95,21 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 							CallResult setResult = setUpExamEnvironment();
 							if (setResult.getState()) {
 								MessageBox messageBox = new MessageBox(
-										window.getShell(), SWT.ICON_INFORMATION);
+										getShell(), SWT.ICON_INFORMATION);
 								messageBox.setMessage("exam-"
 										+ ExamAuth.getExamAuth()
 												.getCurrentExam_id()
 										+ " has already been set up");
 								messageBox.open();
-								super.okPressed();
 							} else {
 								MessageBox messageBox = new MessageBox(
-										window.getShell(), SWT.ICON_INFORMATION);
+										getShell(), SWT.ICON_INFORMATION);
 								messageBox.setMessage(setResult.getMessage());
 								messageBox.open();
 							}
 						} else {
 							MessageBox messageBox = new MessageBox(
-									window.getShell(), SWT.ICON_INFORMATION);
+									getShell(), SWT.ICON_INFORMATION);
 							messageBox.setMessage(result.getMessage());
 							messageBox.open();
 						}
@@ -134,6 +133,7 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 		try {
 			IProject examInfoProject = workspaceroot.getProject("ExamInfo");
 			if (examInfoProject != null && examInfoProject.exists()) {
+				examInfoProject.close(null);
 				examInfoProject.delete(true, null);
 			}
 			examInfoProject.create(null);
