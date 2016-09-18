@@ -5,6 +5,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import org.eclipse.core.resources.IProject;
@@ -14,8 +15,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import com.xclenter.test.model.QuestionModel;
 import com.xclenter.test.util.action.ExamAuth;
 import com.xclenter.test.util.file.DeleteUtil;
+import com.xclenter.test.util.file.EncryptUtil;
 import com.xclenter.test.util.file.FileUtil;
 import com.xclenter.test.util.file.ReadFileUtil;
+import com.xclenter.test.util.file.SaveFileUtil;
 import com.xclenter.test.util.file.ZipUtil;
 
 public class TestDao {
@@ -47,8 +50,8 @@ public class TestDao {
 
 		if (project != null && project.exists()) {
 			String programPath = project.getLocation().toOSString()
-					.replaceAll("\\*", "/")+File.separator
-					+ "Release/" + projectName + ".exe";
+					.replaceAll("\\*", "/")
+					+ File.separator + "Release/" + projectName + ".exe";
 			File program = new File(programPath);
 			if (program.exists()) {
 				/*
@@ -56,38 +59,69 @@ public class TestDao {
 				 */
 				String tmpFilePath = FileUtil.tmpFileSaveRootPath
 						+ File.separator + "unzipFile";
+				final String zipFileRootPath = FileUtil.tmpFileSaveRootPath
+						+ File.separator + "zipFile";
+
 				File tmpFileFolder = new File(tmpFilePath);
 				tmpFileFolder.mkdirs();
 				DeleteUtil.delAllFile(tmpFilePath);
 
-				String zipFilePath = FileUtil.downloadFileSaveRootPath
+				File zipFileRootFolder = new File(zipFileRootPath);
+				zipFileRootFolder.mkdirs();
+				DeleteUtil.delAllFile(zipFileRootPath);
+
+				String encryptedFilePath = FileUtil.downloadFileSaveRootPath
 						+ File.separator + eid + File.separator
-						+ question.getQid() + ".zip";
-				ZipUtil.unZipFiles(new File(zipFilePath), tmpFilePath);
-				File unzipedFile = tmpFileFolder.listFiles()[0];
-				String questionTestCaseRootPath = unzipedFile.getAbsolutePath()
-						+ File.separator + "test_cases";
-				File questionTestCaseRootFolder = new File(
-						questionTestCaseRootPath);
-				String[] test_caseNames = questionTestCaseRootFolder.list();
-				int test_caseCount = 0;
-				int pass_caseCount = 0;
-				for (String test_caseName : test_caseNames) {
-					if (test_caseName.endsWith(".in")) {
-						test_caseCount ++ ;
-						String test_caseOutName = test_caseName.substring(0,
-								test_caseName.length() - 3);
-						test_caseOutName += ".out";
-						String inFilePath = questionTestCaseRootPath+File.separator + test_caseName;
-						String outFilePath = questionTestCaseRootPath+File.separator + test_caseOutName;
-						if(testProgram(programPath,inFilePath,outFilePath)){
-							pass_caseCount ++;
+						+ question.getQid();
+				try {
+					String zipFilePath = zipFileRootPath + File.separator
+							+ question.getQid() + ".zip";
+					String encryptedQuestion = "";
+
+					encryptedQuestion = new String(
+							ReadFileUtil.readFileInBytes(encryptedFilePath),
+							"ISO-8859-1");
+					byte[] decryptedQuestion = EncryptUtil.getEncryptUtil()
+							.decrypt(encryptedQuestion);
+					SaveFileUtil.saveFileWithByte(zipFilePath,
+							decryptedQuestion);
+
+					ZipUtil.unZipFiles(new File(zipFilePath), tmpFilePath);
+					File unzipedFile = tmpFileFolder.listFiles()[0];
+					String questionTestCaseRootPath = unzipedFile
+							.getAbsolutePath() + File.separator + "test_cases";
+					File questionTestCaseRootFolder = new File(
+							questionTestCaseRootPath);
+					String[] test_caseNames = questionTestCaseRootFolder.list();
+					int test_caseCount = 0;
+					int pass_caseCount = 0;
+					for (String test_caseName : test_caseNames) {
+						if (test_caseName.endsWith(".in")) {
+							test_caseCount++;
+							String test_caseOutName = test_caseName.substring(
+									0, test_caseName.length() - 3);
+							test_caseOutName += ".out";
+							String inFilePath = questionTestCaseRootPath
+									+ File.separator + test_caseName;
+							String outFilePath = questionTestCaseRootPath
+									+ File.separator + test_caseOutName;
+							if (testProgram(programPath, inFilePath,
+									outFilePath)) {
+								pass_caseCount++;
+							}
 						}
 					}
+					state = true;
+					data = new TestCasePassResult(test_caseCount,
+							pass_caseCount);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}finally{
+					DeleteUtil.delAllFile(tmpFilePath);
+					DeleteUtil.delAllFile(zipFileRootPath);
 				}
-				state = true;
-				data = new TestCasePassResult(test_caseCount,pass_caseCount);
-			}else{
+			} else {
 				message = "Release/" + projectName + ".exe not exists";
 			}
 		} else {
@@ -95,10 +129,11 @@ public class TestDao {
 					+ question.getQid() + " (projectName : " + projectName
 					+ ")";
 		}
-		return new CallResult(state, message,data);
+		return new CallResult(state, message, data);
 	}
-	
-	public boolean testProgram(String programPath,String inFilePath,String outFilePath){
+
+	public boolean testProgram(String programPath, String inFilePath,
+			String outFilePath) {
 		String command = programPath;
 		try {
 			Process p = Runtime.getRuntime().exec(command);
