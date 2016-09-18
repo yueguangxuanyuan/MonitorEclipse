@@ -1,13 +1,10 @@
 package com.xclenter.test.dao;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
-import org.apache.http.entity.FileEntity;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -15,14 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.xclenter.test.model.QuestionModel;
-import com.xclenter.test.model.TaskModel;
 import com.xclenter.test.util.HttpCommon;
 import com.xclenter.test.util.ServerInfo;
 import com.xclenter.test.util.action.ExamAuth;
 import com.xclenter.test.util.file.FileUtil;
-import com.xclenter.test.util.file.ReadFileUtil;
-import com.xclenter.test.util.file.SaveFileUtil;
 import com.xclenter.test.util.file.ZipUtil;
 
 public class UploadDao {

@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -66,7 +64,7 @@ public abstract class TaskSelectDialog extends TitleAreaDialog {
 
 		// create label
 		Label lbSubject = new Label(cont, SWT.NONE);
-		lbSubject.setText("ÇëÑ¡Ôñ×÷Òµ/¿¼ÊÔ");
+		lbSubject.setText("please choose an exam");
 
 		GridData dataSubject = new GridData();
 		dataSubject.grabExcessHorizontalSpace = true;

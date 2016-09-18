@@ -109,6 +109,7 @@ public class ZipUtil {
 				in.close();
 				out.close();
 			}
+			zip.close();
 		} catch (ZipException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

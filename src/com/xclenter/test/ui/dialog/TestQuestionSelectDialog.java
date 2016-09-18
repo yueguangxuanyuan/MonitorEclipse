@@ -69,7 +69,7 @@ public abstract class TestQuestionSelectDialog extends TitleAreaDialog {
 
 		// create label
 		Label lbSubject = new Label(cont, SWT.NONE);
-		lbSubject.setText("请选择需要测试的问题");
+		lbSubject.setText("please choose a question for testing");
 
 		GridData dataSubject = new GridData();
 		dataSubject.grabExcessHorizontalSpace = true;

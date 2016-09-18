@@ -2,6 +2,8 @@ package com.xclenter.test.ui.actions;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,6 +40,7 @@ import com.xclenter.test.util.file.SaveFileUtil;
  */
 public class TestAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
+	private static Logger logger = LogManager.getLogger("MessageLog");
 
 	/**
 	 * The constructor.
@@ -61,7 +64,7 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 		} else if (ExamAuth.getExamAuth().isInExam()) {
 			List<QuestionModel> currentQuestions = ExamAuth.getExamAuth()
 					.getQuestionOfCurrentExam();
-			String eid = ExamAuth.getExamAuth().getCurrentExam_id();
+			final String eid = ExamAuth.getExamAuth().getCurrentExam_id();
 			TestQuestionSelectDialog testDialog = new TestQuestionSelectDialog(
 					window.getShell(), eid, currentQuestions) {
 				protected void doAfterSelect(QuestionModel questionmodel) {
@@ -72,12 +75,18 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 						String message = "";
 						TestCasePassResult passresult = (TestCasePassResult) callresult
 								.getData();
+						boolean isPass = false;
 						if (passresult.getCaseCount() > passresult
 								.getPassedCaseCount()) {
 							message = "fail to pass test case.";
 						} else {
 							message = "succss to pass test case.";
+							isPass = true;
 						}
+						String passInfo = "total " + passresult.getCaseCount()
+								+ " - passed "
+								+ passresult.getPassedCaseCount();
+						log(LoginAuth.getUsername(),eid,questionmodel.getQid(),isPass,passInfo);
 						message += "(total " + passresult.getCaseCount()
 								+ " - passed "
 								+ passresult.getPassedCaseCount() + ")";
@@ -130,5 +139,12 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
+	}
+
+	private void log(String username, String eid, String qid, boolean isPass,
+			String msg) {
+		logger.info(":: action_type ::test:: username ::" + username
+				+ ":: examid ::" + eid + ":: questionid ::" + qid
+				+ ":: isPass ::" + isPass + ":: message ::" + msg);
 	}
 }

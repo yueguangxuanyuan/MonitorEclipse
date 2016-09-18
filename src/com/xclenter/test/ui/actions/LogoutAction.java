@@ -1,5 +1,7 @@
 package com.xclenter.test.ui.actions;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -22,7 +24,7 @@ import com.xclenter.test.util.action.LoginAuth;
  */
 public class LogoutAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
-
+	private static Logger logger = LogManager.getLogger("MessageLog");
 	private LoginDao loginDao;
 
 	/**
@@ -58,6 +60,7 @@ public class LogoutAction implements IWorkbenchWindowActionDelegate {
 				LoginAuth.saveUser_key("");
 				LoginAuth.changeLoginState(false, "");
 				ExamAuth.getExamAuth().setCurrentExam(null);
+				log(username);
 				messagebox.setMessage(username
 						+ " : you have logged out successfully. ");
 			} else {
@@ -97,5 +100,9 @@ public class LogoutAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
+	}
+	
+	private void log(String account) {
+		logger.info(":: action_type ::logout:: username ::"+account);
 	}
 }

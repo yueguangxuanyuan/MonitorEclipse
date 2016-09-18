@@ -28,8 +28,8 @@ public class LoginDialog extends TitleAreaDialog {
 	  @Override
 	  public void create() {
 	    super.create();
-	    setTitle("µ«¬º");
-	    setMessage("«Î ‰»Îƒ˙µƒ’À∫≈”Î√‹¬Î", IMessageProvider.INFORMATION);
+	    setTitle("login");
+	    setMessage("please enter your account and password", IMessageProvider.INFORMATION);
 	  }
 
 	  @Override
@@ -49,7 +49,7 @@ public class LoginDialog extends TitleAreaDialog {
 
 	  private void createUsername(Composite container) {
 	    Label lbtusername = new Label(container, SWT.NONE);
-	    lbtusername.setText("’À∫≈");
+	    lbtusername.setText("account");
 
 	    GridData datausername = new GridData();
 	    datausername.grabExcessHorizontalSpace = true;
@@ -68,7 +68,7 @@ public class LoginDialog extends TitleAreaDialog {
 
 	 private void createPassword(Composite container) {
 	    Label lbtpassword = new Label(container, SWT.NONE);
-	    lbtpassword.setText("√‹¬Î");
+	    lbtpassword.setText("password");
 
 	    GridData datapassword = new GridData();
 	    datapassword.grabExcessHorizontalSpace = true;

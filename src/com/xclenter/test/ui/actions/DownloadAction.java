@@ -3,6 +3,8 @@ package com.xclenter.test.ui.actions;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.core.settings.model.CSourceEntry;
@@ -42,7 +44,7 @@ import com.xclenter.test.util.action.LoginAuth;
 public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	private DownloadDao downloadDao;
-
+	private static Logger logger = LogManager.getLogger("MessageLog");
 	/**
 	 * The constructor.
 	 */

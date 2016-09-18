@@ -1,5 +1,7 @@
 package com.xclenter.test.ui.actions;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -26,7 +28,7 @@ import com.xclenter.test.util.file.SaveFileUtil;
  */
 public class LoginAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
-
+	private static Logger logger = LogManager.getLogger("MessageLog");
 	private LoginDao loginDao;
 
 	/**
@@ -72,6 +74,9 @@ public class LoginAction implements IWorkbenchWindowActionDelegate {
 						LoginAuth.changeLoginState(true, account);
 						message = "welcome , Mr/Miss "
 								+ LoginAuth.getUsername();
+						
+						log(LoginAuth.getUsername(),new_login.isNew_login());
+						
 						if(login_result.getMessage() != null){
 							message += "(" + login_result.getMessage() + ")";
 						}
@@ -125,5 +130,9 @@ public class LoginAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
+	}
+	
+	private void log(String account,boolean isnew_login) {
+		logger.info(":: action_type ::login:: username ::"+account+":: new_login ::"+isnew_login);
 	}
 }
