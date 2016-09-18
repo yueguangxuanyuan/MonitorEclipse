@@ -65,10 +65,10 @@ public class LoginAction implements IWorkbenchWindowActionDelegate {
 						New_Login new_login = (New_Login) login_result.getData();
 						if (new_login.isNew_login()) {
 							FileDao.clearLegacy();
-							LoginAuth.saveUser_key(new_login.getUser_key());
 						} else {
 							login_result.setMessage("continue");
 						}
+						LoginAuth.saveUser_key(new_login.getUser_key());
 						LoginAuth.changeLoginState(true, account);
 						message = "welcome , Mr/Miss "
 								+ LoginAuth.getUsername();
