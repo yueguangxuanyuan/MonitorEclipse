@@ -103,11 +103,12 @@ public class ExamAuth {
 	}
 
 	private String readCurrentExam() {
-		String content = ReadFileUtil.readFileInString(filePath);
-		if (content.length() > 16) {
-			byte[] decrypted = EncryptUtil.getEncryptUtil().decrypt(content);
+		byte[] content = ReadFileUtil.readFileInBytes(filePath);
+		if (content.length > 16) {
+			byte[] decrypted;
 			try {
-				return new String(decrypted, "ISO-8859-1");
+				decrypted = EncryptUtil.getEncryptUtil().decrypt(new String(content,"ISO-8859-1"));
+				return new String(decrypted);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

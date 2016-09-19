@@ -1,6 +1,5 @@
 package com.xclenter.test.util.file;
 
-import it.sauronsoftware.base64.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -18,6 +17,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class EncryptUtil {
 	private static EncryptUtil encryptUtil;
@@ -45,7 +46,7 @@ public class EncryptUtil {
 	public byte[] decrypt(String input) {
 		try {
 			byte[] inputstream = input.getBytes("ISO-8859-1");
-			inputstream = Base64.decode(inputstream);
+			inputstream = Base64.decodeBase64(inputstream);
 			byte[] iv = Arrays.copyOfRange(inputstream, 0, 16);
 
 			byte[] data = Arrays.copyOfRange(inputstream, 16,
@@ -68,7 +69,7 @@ public class EncryptUtil {
 			baos.write(inputstream);
 			byte[] data = baos.toByteArray();
 			baos.close();
-			data = Base64.encode(data);
+			data = Base64.encodeBase64(data);
 			return data;
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

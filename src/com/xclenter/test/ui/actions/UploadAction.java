@@ -24,6 +24,7 @@ import com.xclenter.test.util.action.LoginAuth;
  */
 public class UploadAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
+
 	/**
 	 * The constructor.
 	 */
@@ -40,36 +41,22 @@ public class UploadAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		if (LoginAuth.isLogin()) {
 			if (ExamAuth.getExamAuth().isInExam()) {
-				CallResult calculateScoreResult = TestDao.getTestDao()
-						.getQuestionScore(
-								ExamAuth.getExamAuth().getCurrentExam_id(),
-								ExamAuth.getExamAuth()
-										.getQuestionOfCurrentExam());
-				if (calculateScoreResult.getState()) {
-					JSONArray scoreJSONArray = (JSONArray) calculateScoreResult.getData();
-					CallResult result = UploadDao.getUploadDao()
-							.uploadExamFile(
-									ExamAuth.getExamAuth().getCurrentExam_id(),scoreJSONArray);
-					if (result.getState()) {
-						MessageBox messageBox = new MessageBox(
-								window.getShell(), SWT.ICON_INFORMATION);
-						messageBox.setMessage("success to upload exam-"
-								+ ExamAuth.getExamAuth().getCurrentExam_id());
-						messageBox.open();
-					} else {
-						MessageBox messageBox = new MessageBox(
-								window.getShell(), SWT.ICON_INFORMATION);
-						messageBox.setMessage("fail to upload exam-"
-								+ ExamAuth.getExamAuth().getCurrentExam_id()
-								+ " (msg:" + result.getMessage() + ")");
-						messageBox.open();
-					}
+				JSONArray scoreJSONArray = ExamAuth.getExamAuth().getScoreOfCurrentExam();
+				CallResult result = UploadDao.getUploadDao().uploadExamFile(
+						ExamAuth.getExamAuth().getCurrentExam_id(),
+						scoreJSONArray);
+				if (result.getState()) {
+					MessageBox messageBox = new MessageBox(window.getShell(),
+							SWT.ICON_INFORMATION);
+					messageBox.setMessage("success to upload exam-"
+							+ ExamAuth.getExamAuth().getCurrentExam_id());
+					messageBox.open();
 				} else {
 					MessageBox messageBox = new MessageBox(window.getShell(),
 							SWT.ICON_INFORMATION);
-					messageBox
-							.setMessage("error happened when collect scores.("
-									+ calculateScoreResult.getMessage() + ")");
+					messageBox.setMessage("fail to upload exam-"
+							+ ExamAuth.getExamAuth().getCurrentExam_id()
+							+ " (msg:" + result.getMessage() + ")");
 					messageBox.open();
 				}
 			} else {

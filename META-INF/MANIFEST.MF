@@ -20,8 +20,7 @@ Bundle-ClassPath: .,
  lib/fluent-hc-4.5.2.jar,
  lib/jna-4.1.0.jar,
  lib/jna-platform-4.1.0.jar,
- lib/httpclient-win-4.5.2.jar,
- lib/javabase64-1.2.jar
+ lib/httpclient-win-4.5.2.jar
 Bundle-Activator: com.xclenter.test.Activator
 Bundle-Vendor: XCLENTER
 Export-Package: com.xclenter.test;uses:="org.eclipse.ui.plugin,org.osgi.framework",
