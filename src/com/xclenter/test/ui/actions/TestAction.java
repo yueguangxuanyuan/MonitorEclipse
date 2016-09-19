@@ -1,5 +1,6 @@
 package com.xclenter.test.ui.actions;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -64,9 +65,11 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 		} else if (ExamAuth.getExamAuth().isInExam()) {
 			List<QuestionModel> currentQuestions = ExamAuth.getExamAuth()
 					.getQuestionOfCurrentExam();
+			HashMap<String, String> qidToProjectName = ExamAuth.getExamAuth()
+					.getQuestionidToProjectNameMap();
 			final String eid = ExamAuth.getExamAuth().getCurrentExam_id();
 			TestQuestionSelectDialog testDialog = new TestQuestionSelectDialog(
-					window.getShell(), eid, currentQuestions) {
+					window.getShell(), eid, currentQuestions, qidToProjectName) {
 				protected void doAfterSelect(QuestionModel questionmodel) {
 					// TODO Auto-generated method stub
 					CallResult callresult = TestDao.getTestDao().testQuestion(
@@ -75,6 +78,11 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 						String message = "";
 						TestCasePassResult passresult = (TestCasePassResult) callresult
 								.getData();
+						ExamAuth.getExamAuth()
+								.updateQuestionScore(
+										questionmodel.getQid(),
+										TestDao.getTestDao().calculateScore(
+												passresult));
 						boolean isPass = false;
 						if (passresult.getCaseCount() > passresult
 								.getPassedCaseCount()) {
@@ -86,7 +94,8 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 						String passInfo = "total " + passresult.getCaseCount()
 								+ " - passed "
 								+ passresult.getPassedCaseCount();
-						log(LoginAuth.getUsername(),eid,questionmodel.getQid(),isPass,passInfo);
+						log(LoginAuth.getUsername(), eid,
+								questionmodel.getQid(), isPass, passInfo);
 						message += "(total " + passresult.getCaseCount()
 								+ " - passed "
 								+ passresult.getPassedCaseCount() + ")";

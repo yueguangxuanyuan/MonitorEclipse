@@ -181,13 +181,17 @@ public class DownloadDao {
 
 				ZipUtil.unZipFiles(new File(zipFilePath), tmpFilePath);
 				File unzipedFile = tmpFileFolder.listFiles()[0];
-				String questionDescriptionPath = unzipedFile.getAbsolutePath()
-						+ File.separator + "question" + File.separator
-						+ "description";
-				String targetFilePath = projectPath + File.separator + "Q"
-						+ qid + File.separator + "description";
-				CopyUtil.CopySingleFileTo(questionDescriptionPath,
-						targetFilePath);
+				String questionPath = unzipedFile.getAbsolutePath()
+						+ File.separator + "question";
+				File questionFolder = new File(questionPath);
+				File[] questionFiles = questionFolder.listFiles();
+				for(File file : questionFiles){
+					String sourceFilePath = file.getAbsolutePath();
+					String targetFilePath = projectPath + File.separator + "Q"
+							+ qid + File.separator +file.getName();
+					CopyUtil.CopySingleFileTo(sourceFilePath,
+							targetFilePath);
+				}
 			}
 			state = true;
 		} catch (UnsupportedEncodingException e) {

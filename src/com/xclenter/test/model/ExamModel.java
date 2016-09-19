@@ -1,6 +1,7 @@
 package com.xclenter.test.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -13,6 +14,8 @@ public class ExamModel {
 	private String begin_time;
 	private String end_time;
 	private List<QuestionModel> questions;
+	
+	private HashMap<String,String> score;
 
 	public ExamModel(String eid, String name, String begin_time,
 			String end_time, List<QuestionModel> questions) {
@@ -22,7 +25,25 @@ public class ExamModel {
 		this.begin_time = begin_time;
 		this.end_time = end_time;
 		this.questions = questions;
+		score = new HashMap<String,String>();
+		for(QuestionModel question : questions){
+			score.put(question.getQid(), "0");
+		}
 	}
+	
+	public ExamModel(String eid, String name, String begin_time,
+			String end_time, List<QuestionModel> questions,
+			HashMap<String, String> score) {
+		super();
+		this.eid = eid;
+		this.name = name;
+		this.begin_time = begin_time;
+		this.end_time = end_time;
+		this.questions = questions;
+		this.score = score;
+	}
+
+
 
 	public String getEid() {
 		return eid;
@@ -43,6 +64,12 @@ public class ExamModel {
 	public List<QuestionModel> getQuestions() {
 		return questions;
 	}
+	
+	
+
+	public HashMap<String, String> getScore() {
+		return score;
+	}
 
 	@Override
 	public String toString() {
@@ -61,6 +88,15 @@ public class ExamModel {
 				questionsJson.put(questionJson);
 			}
 			exam.put("questions", questionsJson);
+			
+			JSONArray scoresJson = new JSONArray();
+			for(String qid: score.keySet()){
+				JSONObject scoreJson = new JSONObject();
+				scoreJson.put("qid", qid);
+				scoreJson.put("score", score.get(qid));
+				scoresJson.put(scoreJson);
+			}
+			exam.put("score", scoresJson);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,7 +121,15 @@ public class ExamModel {
 				String questionname = questionJson.getString("name");
 				questions.add(new QuestionModel(qid,questionname));
 			}
-			exam = new ExamModel(eid,name,begin_time,end_time,questions);
+			HashMap<String,String> scoreMap = new HashMap<>();
+			JSONArray scoresJson = examJSON.getJSONArray("score");
+			for(int i = 0 ; i < scoresJson.length() ;i++){
+				JSONObject scoreJson = scoresJson.getJSONObject(i);
+				String qid = scoreJson.getString("qid");
+				String score = scoreJson.getString("score");
+				scoreMap.put(qid,score);
+			}
+			exam = new ExamModel(eid,name,begin_time,end_time,questions,scoreMap);
 		}catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -84,6 +84,13 @@ public class ReadFileUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return baos.toByteArray();
+		byte[] data = baos.toByteArray();
+		try {
+			baos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return data;
 	}
 }

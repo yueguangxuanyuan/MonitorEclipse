@@ -158,7 +158,9 @@ public class TestDao {
 		}
 		return false;
 	}
-
+/*
+ * 重测一遍题目
+ */
 	public CallResult getQuestionScore(String eid, List<QuestionModel> questions) {
 		boolean state = false;
 		String message = "";
@@ -194,7 +196,7 @@ public class TestDao {
 		return new CallResult(state, message, data);
 	}
 	
-	private String calculateScore(TestCasePassResult tcpr){
+	public String calculateScore(TestCasePassResult tcpr){
 		double score = 0;
 		if(tcpr.getCaseCount() != 0){
 			score = tcpr.getPassedCaseCount()/((double)tcpr.getCaseCount());

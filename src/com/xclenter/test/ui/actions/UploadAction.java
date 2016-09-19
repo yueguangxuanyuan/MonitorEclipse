@@ -1,7 +1,5 @@
 package com.xclenter.test.ui.actions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -70,7 +68,7 @@ public class UploadAction implements IWorkbenchWindowActionDelegate {
 					MessageBox messageBox = new MessageBox(window.getShell(),
 							SWT.ICON_INFORMATION);
 					messageBox
-							.setMessage("error happened when calculate scores.("
+							.setMessage("error happened when collect scores.("
 									+ calculateScoreResult.getMessage() + ")");
 					messageBox.open();
 				}

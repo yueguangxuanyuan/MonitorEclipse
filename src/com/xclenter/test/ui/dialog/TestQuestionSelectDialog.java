@@ -1,11 +1,10 @@
 package com.xclenter.test.ui.dialog;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -22,16 +21,18 @@ import com.xclenter.test.model.QuestionModel;
 public abstract class TestQuestionSelectDialog extends TitleAreaDialog {
 	List<QuestionModel> questions;
 	public String examid;
+	HashMap<String,String> qidToPorjectName;
 
 	public TestQuestionSelectDialog(Shell parentShell) {
 		super(parentShell);
 	}
 
 	public TestQuestionSelectDialog(Shell parentShell, String eid,
-			List<QuestionModel> questions) {
+			List<QuestionModel> questions,HashMap<String,String> qidToPorjectName) {
 		super(parentShell);
 		this.examid = eid;
 		this.questions = questions;
+		this.qidToPorjectName = qidToPorjectName;
 	}
 
 	private Table questionTable;
@@ -79,7 +80,7 @@ public abstract class TestQuestionSelectDialog extends TitleAreaDialog {
 				| SWT.H_SCROLL | SWT.FULL_SELECTION);
 		questionTable.setLayoutData(dataSubject);
 
-		setTableContents(questionTable, questions);
+		setTableContents(questionTable, questions,qidToPorjectName);
 	}
 
 	protected abstract void doAfterSelect(QuestionModel questionmodel);
@@ -105,7 +106,7 @@ public abstract class TestQuestionSelectDialog extends TitleAreaDialog {
 		}
 	}
 
-	public void setTableContents(Table table, List<QuestionModel> data) {
+	public void setTableContents(Table table, List<QuestionModel> data,HashMap<String,String> qidToPorjectName) {
 		table.removeAll();
 
 		table.setHeaderVisible(true);
@@ -114,11 +115,14 @@ public abstract class TestQuestionSelectDialog extends TitleAreaDialog {
 		idColumn.setText("id");
 		TableColumn nameColumn = new TableColumn(table, SWT.NONE);
 		nameColumn.setText("name");
+		TableColumn projectNameColumn = new TableColumn(table, SWT.NONE);
+		projectNameColumn.setText("projectName");
 
 		for (QuestionModel item : data) {
 			TableItem rowItem = new TableItem(table, SWT.NONE);
 			rowItem.setText(0, item.getQid());
 			rowItem.setText(1, item.getName());
+			rowItem.setText(2, qidToPorjectName.get(item.getQid()));
 		}
 
 		final TableColumn[] columns = table.getColumns();
