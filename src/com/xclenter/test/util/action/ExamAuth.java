@@ -128,6 +128,17 @@ public class ExamAuth {
 			}
 		}
 	}
+	
+	public String getExamInfo(){
+		String examInfo = "";
+		if(currentExam != null){
+			examInfo += "exam_id : " +currentExam.getEid() + "\n";
+			examInfo += "exam_name : " +currentExam.getName() + "\n";
+			examInfo += "begin_time : " +currentExam.getBegin_time() + "\n";
+			examInfo += "end_time : " +currentExam.getEnd_time() + "\n";
+		}
+		return examInfo;
+	}
 
 	public JSONArray getScoreOfCurrentExam() {
 		JSONArray scoresJson = new JSONArray();

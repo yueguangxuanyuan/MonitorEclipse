@@ -1,5 +1,6 @@
 package com.xclenter.test.ui.actions;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,6 +33,7 @@ import com.xclenter.test.model.TaskModel;
 import com.xclenter.test.ui.dialog.TaskSelectDialog;
 import com.xclenter.test.util.action.ExamAuth;
 import com.xclenter.test.util.action.LoginAuth;
+import com.xclenter.test.util.file.SaveFileUtil;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -45,6 +47,7 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	private DownloadDao downloadDao;
 	private static Logger logger = LogManager.getLogger("MessageLog");
+
 	/**
 	 * The constructor.
 	 */
@@ -110,8 +113,8 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 								messageBox.open();
 							}
 						} else {
-							MessageBox messageBox = new MessageBox(
-									getShell(), SWT.ICON_INFORMATION);
+							MessageBox messageBox = new MessageBox(getShell(),
+									SWT.ICON_INFORMATION);
 							messageBox.setMessage(result.getMessage());
 							messageBox.open();
 						}
@@ -141,6 +144,9 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 			examInfoProject.create(null);
 			String examInfoProjectPath = examInfoProject.getLocation()
 					.toOSString();
+			String examInfo = ExamAuth.getExamAuth().getExamInfo();
+			SaveFileUtil.saveFileWithString(examInfoProjectPath
+					+ File.separator + "examInfo", examInfo);
 			CallResult result = downloadDao.unzipQuestionDescription(
 					examInfoProjectPath, ExamAuth.getExamAuth()
 							.getCurrentExam_id(), questionidToProjectNameMap);
