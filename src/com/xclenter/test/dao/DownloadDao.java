@@ -163,8 +163,9 @@ public class DownloadDao {
 
 		String encryptedFileRootPath = FileUtil.downloadFileSaveRootPath
 				+ File.separator + eid;
-		try {
-			for (String qid : qidTopnameMap.keySet()) {
+
+		for (String qid : qidTopnameMap.keySet()) {
+			try {
 				String encryptFilePath = encryptedFileRootPath + File.separator
 						+ qid;
 				String zipFilePath = zipFileRootPath + File.separator + qid
@@ -176,7 +177,7 @@ public class DownloadDao {
 						"ISO-8859-1");
 
 				byte[] decryptedQuestion = EncryptUtil.getEncryptUtil()
-						.decrypt(encryptedQuestion);
+						.decrypt(encryptedQuestion.getBytes("ISO-8859-1"));
 				SaveFileUtil.saveFileWithByte(zipFilePath, decryptedQuestion);
 
 				ZipUtil.unZipFiles(new File(zipFilePath), tmpFilePath);
@@ -185,26 +186,26 @@ public class DownloadDao {
 						+ File.separator + "question";
 				File questionFolder = new File(questionPath);
 				File[] questionFiles = questionFolder.listFiles();
-				for(File file : questionFiles){
+				for (File file : questionFiles) {
 					String sourceFilePath = file.getAbsolutePath();
 					String targetFilePath = projectPath + File.separator + "Q"
-							+ qid + File.separator +file.getName();
-					CopyUtil.CopySingleFileTo(sourceFilePath,
-							targetFilePath);
+							+ qid + File.separator + file.getName();
+					CopyUtil.CopySingleFileTo(sourceFilePath, targetFilePath);
 				}
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				state = false;
+				message = "questionFile encode error";
+				e.printStackTrace();
+				return new CallResult(state, message);
+			} finally {
+				DeleteUtil.delAllFile(tmpFilePath);
+				DeleteUtil.delAllFile(zipFileRootPath);
 			}
-			state = true;
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			state = false;
-			message = "questionFile encode error";
-			e.printStackTrace();
-			return new CallResult(state, message);
-		}finally{
-			DeleteUtil.delAllFile(tmpFilePath);
-			DeleteUtil.delAllFile(zipFileRootPath);
 		}
+		state = true;
 		return new CallResult(state, message);
+
 	}
 
 	private void clearExamDownloadSpace(String eid) {

@@ -15,6 +15,7 @@ import com.xclenter.test.dao.FileDao;
 import com.xclenter.test.dao.LoginDao;
 import com.xclenter.test.dao.New_Login;
 import com.xclenter.test.ui.dialog.LoginDialog;
+import com.xclenter.test.util.action.ExamAuth;
 import com.xclenter.test.util.action.LoginAuth;
 import com.xclenter.test.util.file.SaveFileUtil;
 
@@ -67,6 +68,7 @@ public class LoginAction implements IWorkbenchWindowActionDelegate {
 						New_Login new_login = (New_Login) login_result.getData();
 						if (new_login.isNew_login()) {
 							FileDao.clearLegacy();
+							ExamAuth.getExamAuth().setCurrentExam(null);
 						} else {
 							login_result.setMessage("continue");
 						}

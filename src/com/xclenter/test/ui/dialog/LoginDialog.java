@@ -56,13 +56,6 @@ public class LoginDialog extends TitleAreaDialog {
 	    datausername.horizontalAlignment = GridData.FILL;
 
 	    txtUsername = new Text(container, SWT.BORDER);
-	    txtUsername.addVerifyListener(new VerifyListener(){
-			public void verifyText(VerifyEvent e) {
-				if(((Text)e.getSource()).getText().length() > 19){
-					e.doit = false;
-				}
-			}
-	    });
 	    txtUsername.setLayoutData(datausername);
 	  }
 
@@ -74,17 +67,8 @@ public class LoginDialog extends TitleAreaDialog {
 	    datapassword.grabExcessHorizontalSpace = true;
 	    datapassword.horizontalAlignment = GridData.FILL;
 	    txtPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
-	    txtPassword.addVerifyListener(new VerifyListener(){
-			public void verifyText(VerifyEvent e) {
-				if(((Text)e.getSource()).getText().length() > 19){
-					e.doit = false;
-				}
-			}
-	    });
 	    txtPassword.setLayoutData(datapassword);
 	  }
-
-
 
 	  @Override
 	  protected boolean isResizable() {

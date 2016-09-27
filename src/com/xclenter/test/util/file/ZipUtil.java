@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -83,7 +84,8 @@ public class ZipUtil {
 		}
 		ZipFile zip;
 		try {
-			zip = new ZipFile(zipFile);
+			Charset gbk = Charset.forName("GBK");
+			zip = new ZipFile(zipFile,gbk);
 			for (Enumeration entries = zip.entries(); entries.hasMoreElements();) {
 				ZipEntry entry = (ZipEntry) entries.nextElement();
 				String zipEntryName = entry.getName();

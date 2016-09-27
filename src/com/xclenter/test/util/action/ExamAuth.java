@@ -98,7 +98,7 @@ public class ExamAuth {
 		if (currentExam != null) {
 			content = currentExam.toString();
 		}
-		byte[] encrypted = EncryptUtil.getEncryptUtil().encrypt(content);
+		byte[] encrypted = EncryptUtil.getEncryptUtil().encrypt(content.getBytes());
 		SaveFileUtil.saveFileWithByte(filePath, encrypted);
 	}
 
@@ -107,9 +107,9 @@ public class ExamAuth {
 		if (content.length > 16) {
 			byte[] decrypted;
 			try {
-				decrypted = EncryptUtil.getEncryptUtil().decrypt(new String(content,"ISO-8859-1"));
+				decrypted = EncryptUtil.getEncryptUtil().decrypt(content);
 				return new String(decrypted);
-			} catch (UnsupportedEncodingException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

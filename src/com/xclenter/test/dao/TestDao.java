@@ -79,11 +79,7 @@ public class TestDao {
 				try {
 					String zipFilePath = zipFileRootPath + File.separator
 							+ question.getQid() + ".zip";
-					String encryptedQuestion = "";
-
-					encryptedQuestion = new String(
-							ReadFileUtil.readFileInBytes(encryptedFilePath),
-							"ISO-8859-1");
+					byte[] encryptedQuestion =ReadFileUtil.readFileInBytes(encryptedFilePath);
 					byte[] decryptedQuestion = EncryptUtil.getEncryptUtil()
 							.decrypt(encryptedQuestion);
 					SaveFileUtil.saveFileWithByte(zipFilePath,
@@ -117,7 +113,7 @@ public class TestDao {
 					state = true;
 					data = new TestCasePassResult(test_caseCount,
 							pass_caseCount);
-				} catch (UnsupportedEncodingException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} finally {
@@ -143,6 +139,7 @@ public class TestDao {
 			// Process p = pb.start();
 			OutputStream os = p.getOutputStream();
 			os.write(ReadFileUtil.readFileInBytes(inFilePath));
+			os.flush();
 			os.close();
 			InputStream is = p.getInputStream();
 			byte[] programout = ReadFileUtil.readInputStreamIntoBytes(is);

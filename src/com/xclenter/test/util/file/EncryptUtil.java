@@ -1,6 +1,5 @@
 package com.xclenter.test.util.file;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +27,7 @@ public class EncryptUtil {
 	private static final String KEY_ALGORITHM = "AES";
 
 	private static final String DEFAULT_CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
-	
+
 	private static String key = "hYOTz5Il8IzWQSVk";
 
 	private EncryptUtil() {
@@ -42,10 +41,9 @@ public class EncryptUtil {
 		return encryptUtil;
 	}
 
-	
-	public byte[] decrypt(String input) {
+	public byte[] decrypt(byte[] input) {
 		try {
-			byte[] inputstream = input.getBytes("ISO-8859-1");
+			byte[] inputstream = input;
 			inputstream = Base64.decodeBase64(inputstream);
 			byte[] iv = Arrays.copyOfRange(inputstream, 0, 16);
 
@@ -58,14 +56,13 @@ public class EncryptUtil {
 		}
 		return null;
 	}
-	
-	public byte[] encrypt(String input) {
+
+	public byte[] encrypt(byte[] input) {
 		try {
 			byte[] iv = generateIV(16).getBytes();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			baos.write(iv);
-			byte[] inputstream = encrypt(input.getBytes("ISO-8859-1"),
-					key.getBytes(), iv);
+			byte[] inputstream = encrypt(input, key.getBytes(), iv);
 			baos.write(inputstream);
 			byte[] data = baos.toByteArray();
 			baos.close();
@@ -85,6 +82,7 @@ public class EncryptUtil {
 		// 生成密钥
 		return new SecretKeySpec(key, KEY_ALGORITHM);
 	}
+
 	private String generateIV(int length) { // length表示生成字符串的长度
 		String base = "abcdefghijklmnopqrstuvwxyz0123456789";
 		Random random = new Random();
@@ -95,7 +93,7 @@ public class EncryptUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	public byte[] encrypt(byte[] data, byte[] key, byte[] iv) {
 		// 实例化
 		Cipher cipher;
