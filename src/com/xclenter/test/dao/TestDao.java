@@ -145,15 +145,31 @@ public class TestDao {
 			byte[] programout = ReadFileUtil.readInputStreamIntoBytes(is);
 			p.destroy();
 			byte[] exceptout = ReadFileUtil.readFileInBytes(outFilePath);
-			if (programout != null && exceptout != null
-					&& programout.length == exceptout.length) {
-				return Arrays.equals(programout, exceptout);
+			if (programout != null && exceptout != null) {
+				return checkProgramout(programout, exceptout);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	/*
+	 * 对比程序输出与预期输出
+	 */
+	private boolean checkProgramout(byte[] programout,byte[] exceptout){
+		String[] programout_stringArray = spliteByteArray(programout);
+		String[] exceptout_stringArray = spliteByteArray(exceptout);
+		return Arrays.equals(programout_stringArray, exceptout_stringArray);
+	}
+	
+	private String[] spliteByteArray(byte[] input){
+		String input_str = new String(input);
+		input_str = input_str.replaceAll("\\s+", " ");
+		input_str = input_str.trim();
+		
+		return input_str.split(" ");
 	}
 /*
  * 重测一遍题目
