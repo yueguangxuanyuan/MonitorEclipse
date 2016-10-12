@@ -1,8 +1,10 @@
 package com.xclenter.test.dao;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -15,6 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.microsmadio.invoker.executor.TestCase;
+import com.microsmadio.invoker.executor.TestCaseExecutor;
+import com.microsmadio.invoker.listener.IReadProcessStreamListener;
 import com.xclenter.test.model.QuestionModel;
 import com.xclenter.test.util.action.ExamAuth;
 import com.xclenter.test.util.file.DeleteUtil;
@@ -130,29 +135,63 @@ public class TestDao {
 		}
 		return new CallResult(state, message, data);
 	}
-
-	public boolean testProgram(String programPath, String inFilePath,
-			String outFilePath) {
-		String command = programPath;
-		try {
-			Process p = Runtime.getRuntime().exec(command);
-			// Process p = pb.start();
-			OutputStream os = p.getOutputStream();
-			os.write(ReadFileUtil.readFileInBytes(inFilePath));
-			os.flush();
-			os.close();
-			InputStream is = p.getInputStream();
-			byte[] programout = ReadFileUtil.readInputStreamIntoBytes(is);
-			p.destroy();
-			byte[] exceptout = ReadFileUtil.readFileInBytes(outFilePath);
-			if (programout != null && exceptout != null) {
-				return checkProgramout(programout, exceptout);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private class ProgramtestResult{
+		private boolean isSuccess;
+		
+		public ProgramtestResult() {
+			super();
+			this.isSuccess = false;
 		}
-		return false;
+
+		public boolean isSuccess() {
+			return isSuccess;
+		}
+
+		public void setSuccess(boolean isSuccess) {
+			this.isSuccess = isSuccess;
+		}
+		
+	}
+	TestCaseExecutor pp = new TestCaseExecutor();
+	public boolean testProgram(String programPath, String inFilePath,
+			final String outFilePath) {
+		String command = programPath;
+		final ProgramtestResult  programtestResult = new ProgramtestResult();
+		IReadProcessStreamListener readStreamHandler = new IReadProcessStreamListener() {
+            @Override
+            public void onReadProcessStream(InputStream stream) {
+            	byte[] programout = ReadFileUtil.readInputStreamIntoBytes(stream);
+    			byte[] exceptout = ReadFileUtil.readFileInBytes(outFilePath);
+    			if (programout != null && exceptout != null) {
+    				programtestResult.setSuccess(checkProgramout(programout, exceptout));
+    			}
+            }
+        };
+        
+        TestCase t1 = new TestCase(command, 1000);
+        t1.setTaskOutputCallback(readStreamHandler);
+        boolean r = false;
+        r = pp.submit(t1);
+        return r?programtestResult.isSuccess():r;
+//		try {
+//			Process p = Runtime.getRuntime().exec(command);
+//			// Process p = pb.start();
+//			OutputStream os = p.getOutputStream();
+//			os.write(ReadFileUtil.readFileInBytes(inFilePath));
+//			os.flush();
+//			os.close();
+//			InputStream is = p.getInputStream();
+//			byte[] programout = ReadFileUtil.readInputStreamIntoBytes(is);
+//			p.destroy();
+//			byte[] exceptout = ReadFileUtil.readFileInBytes(outFilePath);
+//			if (programout != null && exceptout != null) {
+//				return checkProgramout(programout, exceptout);
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return false;
 	}
 	
 	/*

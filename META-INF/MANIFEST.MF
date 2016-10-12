@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MonitorEclipse
 Bundle-SymbolicName: MonitorEclipse;singleton:=true
-Bundle-Version: 1.0.4.qualifier
+Bundle-Version: 1.0.5.qualifier
 Bundle-ClassPath: .,
  lib/log4j-api-2.5.jar,
  lib/log4j-core-2.5.jar,
@@ -20,7 +20,8 @@ Bundle-ClassPath: .,
  lib/fluent-hc-4.5.2.jar,
  lib/jna-4.1.0.jar,
  lib/jna-platform-4.1.0.jar,
- lib/httpclient-win-4.5.2.jar
+ lib/httpclient-win-4.5.2.jar,
+ lib/processInvoker.jar
 Bundle-Activator: com.xclenter.test.Activator
 Bundle-Vendor: XCLENTER
 Export-Package: com.xclenter.test;uses:="org.eclipse.ui.plugin,org.osgi.framework",
