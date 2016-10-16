@@ -98,7 +98,11 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 								questionmodel.getQid(), isPass, passInfo);
 						message += "(total " + passresult.getCaseCount()
 								+ " - passed "
-								+ passresult.getPassedCaseCount() + ")";
+								+ passresult.getPassedCaseCount();
+						if(passresult.getTimeoutCaseCount() > 0){
+							message += "- timeout "+passresult.getTimeoutCaseCount();
+						}
+						message +=")";
 						MessageBox messageBox = new MessageBox(
 								window.getShell(), SWT.ICON_INFORMATION);
 						messageBox.setMessage(message);

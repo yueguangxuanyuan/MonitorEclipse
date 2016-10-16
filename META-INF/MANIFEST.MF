@@ -21,7 +21,8 @@ Bundle-ClassPath: .,
  lib/jna-4.1.0.jar,
  lib/jna-platform-4.1.0.jar,
  lib/httpclient-win-4.5.2.jar,
- lib/processInvoker.jar
+ lib/processInvoker.jar,
+ lib/ProcessInvoker1.0.1.jar
 Bundle-Activator: com.xclenter.test.Activator
 Bundle-Vendor: XCLENTER
 Export-Package: com.xclenter.test;uses:="org.eclipse.ui.plugin,org.osgi.framework",
