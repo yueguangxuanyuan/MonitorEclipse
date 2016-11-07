@@ -43,19 +43,7 @@ public class ExamAuth {
 	public boolean isInExam() {
 		boolean result = false;
 		if (currentExam != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-			try {
-				Date start_time = sdf.parse(currentExam.getBegin_time());
-				Date end_time = sdf.parse(currentExam.getEnd_time());
-				Date current_time = new Date();
-				if (current_time.after(start_time)
-						&& current_time.before(end_time)) {
-					return true;
-				}
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			result = true;
 		}
 		return result;
 	}

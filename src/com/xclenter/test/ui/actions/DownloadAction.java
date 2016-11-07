@@ -139,7 +139,7 @@ public class DownloadAction implements IWorkbenchWindowActionDelegate {
 			IProject examInfoProject = workspaceroot.getProject("ExamInfo");
 			if (examInfoProject != null && examInfoProject.exists()) {
 				examInfoProject.close(null);
-				examInfoProject.delete(true, null);
+				examInfoProject.delete(true,true,null);
 			}
 			examInfoProject.create(null);
 			String examInfoProjectPath = examInfoProject.getLocation()

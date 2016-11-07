@@ -58,7 +58,7 @@ public class TestDao {
 		String message = "";
 		Object data = null;
 		/*
-		 * ¶ÁÈ¡ Release/projectName.exe ÎÄ¼þ
+		 * ï¿½ï¿½È¡ Release/projectName.exe ï¿½Ä¼ï¿½
 		 */
 		IWorkspaceRoot workspaceroot = ResourcesPlugin.getWorkspace().getRoot();
 		String projectName = ExamAuth.getExamAuth()
@@ -72,7 +72,7 @@ public class TestDao {
 			File program = new File(programPath);
 			if (program.exists()) {
 				/*
-				 * ¶ÁÈ¡²âÊÔÓÃÀý ²¢²âÊÔ
+				 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				 */
 				String tmpFilePath = FileUtil.tmpFileSaveRootPath
 						+ File.separator + "unzipFile";
@@ -233,7 +233,7 @@ public class TestDao {
 	}
 	
 	/*
-	 * ¶Ô±È³ÌÐòÊä³öÓëÔ¤ÆÚÊä³ö
+	 * ï¿½Ô±È³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private boolean checkProgramout(byte[] programout,byte[] exceptout){
 		String[] programout_stringArray = spliteByteArray(programout);
@@ -249,7 +249,7 @@ public class TestDao {
 		return input_str.split(" ");
 	}
 /*
- * ÖØ²âÒ»±éÌâÄ¿
+ * ï¿½Ø²ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ä¿
  */
 	public CallResult getQuestionScore(String eid, List<QuestionModel> questions) {
 		boolean state = false;
