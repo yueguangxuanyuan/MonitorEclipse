@@ -91,9 +91,7 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 							message = "succss to pass test case.";
 							isPass = true;
 						}
-						String passInfo = "total " + passresult.getCaseCount()
-								+ " - passed "
-								+ passresult.getPassedCaseCount();
+						String passInfo =passresult.getMessage();
 						log(LoginAuth.getUsername(), eid,
 								questionmodel.getQid(), isPass, passInfo);
 						message += "(total " + passresult.getCaseCount()

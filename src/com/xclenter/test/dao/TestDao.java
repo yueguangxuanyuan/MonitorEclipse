@@ -50,9 +50,11 @@ public class TestDao {
 		}
 		return testDao;
 	}
-	final int SUCCESS =1;
-    final int TIME_OUT = 2;
-    final int NORMAL_FAIL =3;
+
+	final int SUCCESS = 1;
+	final int TIME_OUT = 2;
+	final int NORMAL_FAIL = 3;
+
 	public CallResult testQuestion(String eid, QuestionModel question) {
 		boolean state = false;
 		String message = "";
@@ -71,9 +73,6 @@ public class TestDao {
 					+ File.separator + "Release/" + projectName + ".exe";
 			File program = new File(programPath);
 			if (program.exists()) {
-				/*
-				 * ��ȡ�������� ������
-				 */
 				String tmpFilePath = FileUtil.tmpFileSaveRootPath
 						+ File.separator + "unzipFile";
 				final String zipFileRootPath = FileUtil.tmpFileSaveRootPath
@@ -93,7 +92,8 @@ public class TestDao {
 				try {
 					String zipFilePath = zipFileRootPath + File.separator
 							+ question.getQid() + ".zip";
-					byte[] encryptedQuestion =ReadFileUtil.readFileInBytes(encryptedFilePath);
+					byte[] encryptedQuestion = ReadFileUtil
+							.readFileInBytes(encryptedFilePath);
 					byte[] decryptedQuestion = EncryptUtil.getEncryptUtil()
 							.decrypt(encryptedQuestion);
 					SaveFileUtil.saveFileWithByte(zipFilePath,
@@ -109,12 +109,16 @@ public class TestDao {
 					int test_caseCount = 0;
 					int pass_caseCount = 0;
 					int timeout_caseCount = 0;
+					JSONObject test_result = new JSONObject();
+					JSONArray passedcaseids = new JSONArray();
+					JSONArray timeoutcaseids = new JSONArray();
+					JSONArray wrongcaseids = new JSONArray();
 					for (String test_caseName : test_caseNames) {
 						if (test_caseName.endsWith(".in")) {
 							test_caseCount++;
-							String test_caseOutName = test_caseName.substring(
-									0, test_caseName.length() - 3);
-							test_caseOutName += ".out";
+							String test_caseid = test_caseName.substring(0,
+									test_caseName.length() - 3);
+							String test_caseOutName = test_caseid + ".out";
 							String inFilePath = questionTestCaseRootPath
 									+ File.separator + test_caseName;
 							String outFilePath = questionTestCaseRootPath
@@ -122,17 +126,26 @@ public class TestDao {
 							switch (testProgram(programPath, inFilePath,
 									outFilePath)) {
 							case SUCCESS:
+								passedcaseids.put(test_caseid);
 								pass_caseCount++;
 								break;
 							case TIME_OUT:
+								timeoutcaseids.put(test_caseid);
 								timeout_caseCount++;
+								break;
+							default:
+								wrongcaseids.put(test_caseid);
 								break;
 							}
 						}
 					}
+					test_result.put("success", passedcaseids);
+					test_result.put("wrong", wrongcaseids);
+					test_result.put("timeout", timeoutcaseids);
 					state = true;
 					data = new TestCasePassResult(test_caseCount,
-							pass_caseCount,timeout_caseCount);
+							pass_caseCount, timeout_caseCount,
+							test_result.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -150,14 +163,15 @@ public class TestDao {
 		}
 		return new CallResult(state, message, data);
 	}
-	private class ProgramtestResult{
+
+	private class ProgramtestResult {
 		private boolean isSuccess;
 		private boolean isTimeout;
-		
+
 		public ProgramtestResult() {
 			super();
 			this.isSuccess = false;
-			this.isTimeout =false;
+			this.isTimeout = false;
 		}
 
 		public boolean isSuccess() {
@@ -176,81 +190,88 @@ public class TestDao {
 			this.isTimeout = isTimeout;
 		}
 	}
+
 	TestCaseExecutor pp = new TestCaseExecutor();
+
 	public int testProgram(String programPath, final String inFilePath,
 			final String outFilePath) {
 		String command = programPath;
-		final ProgramtestResult  programtestResult = new ProgramtestResult();
+		final ProgramtestResult programtestResult = new ProgramtestResult();
 		IWriteProcessStreamListener writeStreamHandler = new IWriteProcessStreamListener() {
-            @Override
-            public void onWriteProcessStream(OutputStream stream) {
-                try {
-                    BufferedReader input = new BufferedReader(new FileReader((inFilePath)));
-                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(stream));
-                    String line = null;
-                    while ((line = input.readLine()) != null) {
-                        bw.write(line);
-                        bw.newLine();
-                    }
-                    bw.close();
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+			@Override
+			public void onWriteProcessStream(OutputStream stream) {
+				try {
+					BufferedReader input = new BufferedReader(new FileReader(
+							(inFilePath)));
+					BufferedWriter bw = new BufferedWriter(
+							new OutputStreamWriter(stream));
+					String line = null;
+					while ((line = input.readLine()) != null) {
+						bw.write(line);
+						bw.newLine();
+					}
+					bw.close();
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
 		IReadProcessStreamListener readStreamHandler = new IReadProcessStreamListener() {
-            @Override
-            public void onReadProcessStream(InputStream stream) {
-            	byte[] programout = ReadFileUtil.readInputStreamIntoBytes(stream);
-    			byte[] exceptout = ReadFileUtil.readFileInBytes(outFilePath);
-    			if (programout != null && exceptout != null) {
-    				programtestResult.setSuccess(checkProgramout(programout, exceptout));
-    			}
-            }
-        };
-        
-        TestCase t1 = new TestCase(command, 1000);
-        t1.setTaskInputCallback(writeStreamHandler);
-        t1.setTaskOutputCallback(readStreamHandler);
-        boolean r = false;
-        ITimeOutListener timeOutListener=new ITimeOutListener() {
-            public void onExecutionTimeOut(ExecutionEventArgs eventArgs) {
-                programtestResult.setTimeout(true);
-            }
-        };
-        pp.addTimeOutListener(timeOutListener);
-        r = pp.submit(t1);
-        pp.removeTimeOutListener(timeOutListener);
-        
-        int returnVal = NORMAL_FAIL;
-        if(r && programtestResult.isSuccess()){
-        	returnVal = SUCCESS;
-        }else if(programtestResult.isTimeout()){
-        	returnVal = TIME_OUT;
-        }
-        return returnVal;
+			@Override
+			public void onReadProcessStream(InputStream stream) {
+				byte[] programout = ReadFileUtil
+						.readInputStreamIntoBytes(stream);
+				byte[] exceptout = ReadFileUtil.readFileInBytes(outFilePath);
+				if (programout != null && exceptout != null) {
+					programtestResult.setSuccess(checkProgramout(programout,
+							exceptout));
+				}
+			}
+		};
+
+		TestCase t1 = new TestCase(command, 1000);
+		t1.setTaskInputCallback(writeStreamHandler);
+		t1.setTaskOutputCallback(readStreamHandler);
+		boolean r = false;
+		ITimeOutListener timeOutListener = new ITimeOutListener() {
+			public void onExecutionTimeOut(ExecutionEventArgs eventArgs) {
+				programtestResult.setTimeout(true);
+			}
+		};
+		pp.addTimeOutListener(timeOutListener);
+		r = pp.submit(t1);
+		pp.removeTimeOutListener(timeOutListener);
+
+		int returnVal = NORMAL_FAIL;
+		if (r && programtestResult.isSuccess()) {
+			returnVal = SUCCESS;
+		} else if (programtestResult.isTimeout()) {
+			returnVal = TIME_OUT;
+		}
+		return returnVal;
 	}
-	
+
 	/*
 	 * �Աȳ��������Ԥ�����
 	 */
-	private boolean checkProgramout(byte[] programout,byte[] exceptout){
+	private boolean checkProgramout(byte[] programout, byte[] exceptout) {
 		String[] programout_stringArray = spliteByteArray(programout);
 		String[] exceptout_stringArray = spliteByteArray(exceptout);
 		return Arrays.equals(programout_stringArray, exceptout_stringArray);
 	}
-	
-	private String[] spliteByteArray(byte[] input){
+
+	private String[] spliteByteArray(byte[] input) {
 		String input_str = new String(input);
 		input_str = input_str.replaceAll("\\s+", " ");
 		input_str = input_str.trim();
-		
+
 		return input_str.split(" ");
 	}
-/*
- * �ز�һ����Ŀ
- */
+
+	/*
+	 * �ز�һ����Ŀ
+	 */
 	public CallResult getQuestionScore(String eid, List<QuestionModel> questions) {
 		boolean state = false;
 		String message = "";
@@ -263,7 +284,8 @@ public class TestDao {
 				if (result.getState()) {
 					JSONObject scoreJSON = new JSONObject();
 					scoreJSON.put("qid", question.getQid());
-					TestCasePassResult tcpr = (TestCasePassResult) result.getData();
+					TestCasePassResult tcpr = (TestCasePassResult) result
+							.getData();
 					scoreJSON.put("score", calculateScore(tcpr));
 					scoreJSONArray.put(scoreJSON);
 				} else {
@@ -273,10 +295,10 @@ public class TestDao {
 					errorMessageJSONArray.put(errorMessageJSON);
 				}
 			}
-			if(errorMessageJSONArray.length() == 0){
+			if (errorMessageJSONArray.length() == 0) {
 				state = true;
 			}
-			message  = errorMessageJSONArray.toString();
+			message = errorMessageJSONArray.toString();
 			data = scoreJSONArray;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -285,11 +307,11 @@ public class TestDao {
 		}
 		return new CallResult(state, message, data);
 	}
-	
-	public String calculateScore(TestCasePassResult tcpr){
+
+	public String calculateScore(TestCasePassResult tcpr) {
 		double score = 0;
-		if(tcpr.getCaseCount() != 0){
-			score = tcpr.getPassedCaseCount()/((double)tcpr.getCaseCount());
+		if (tcpr.getCaseCount() != 0) {
+			score = tcpr.getPassedCaseCount() / ((double) tcpr.getCaseCount());
 		}
 		return String.format("%.3f", score);
 	}

@@ -4,12 +4,14 @@ public class TestCasePassResult {
 	int caseCount;
 	int passedCaseCount;
 	int timeoutCaseCount;
+	String message;
 
-	public TestCasePassResult(int caseCount, int passedCaseCount,int timeoutCaseCount) {
+	public TestCasePassResult(int caseCount, int passedCaseCount,int timeoutCaseCount,String message) {
 		super();
 		this.caseCount = caseCount;
 		this.passedCaseCount = passedCaseCount;
 		this.timeoutCaseCount = timeoutCaseCount;
+		this.message = message;
 	}
 
 	public int getCaseCount() {
@@ -22,6 +24,10 @@ public class TestCasePassResult {
 
 	public int getTimeoutCaseCount() {
 		return timeoutCaseCount;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 	
 }
