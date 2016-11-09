@@ -57,12 +57,7 @@ public class TestAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		if (!LoginAuth.isLogin()) {
-			MessageBox messageBox = new MessageBox(window.getShell(),
-					SWT.ICON_INFORMATION);
-			messageBox.setMessage("Please Login first");
-			messageBox.open();
-		} else if (ExamAuth.getExamAuth().isInExam()) {
+		if (ExamAuth.getExamAuth().isInExam()) {
 			List<QuestionModel> currentQuestions = ExamAuth.getExamAuth()
 					.getQuestionOfCurrentExam();
 			HashMap<String, String> qidToProjectName = ExamAuth.getExamAuth()
