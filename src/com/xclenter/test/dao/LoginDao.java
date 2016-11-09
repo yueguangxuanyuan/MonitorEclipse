@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.xclenter.test.util.HttpCommon;
+import com.xclenter.test.util.MAC_Address;
 import com.xclenter.test.util.ServerInfo;
 import com.xclenter.test.util.action.LoginAuth;
 import com.xclenter.test.util.file.SaveFileUtil;
@@ -29,7 +30,7 @@ public class LoginDao {
 	public CallResult login(String username, String password) {
 		boolean state = false;
 		String message = null;
-		Object data = null; //´«Êänew_Login
+		Object data = null; //ï¿½ï¿½ï¿½ï¿½new_Login
 		Map<String, String> loginMesssage = new HashMap<>();
 
 		String user_key = LoginAuth.getUser_key();
@@ -37,7 +38,7 @@ public class LoginDao {
 		loginMesssage.put("username", username);
 		loginMesssage.put("password", password);
 		loginMesssage.put("used_key", user_key);
-
+		loginMesssage.put("MAC", MAC_Address.mac_address);
 		String url = "http://" + ServerInfo.serverIP + "/login/";
 		JSONObject feedBack = HttpCommon.getHttpCommon()
 				.getJsonResponseWithParams(url, loginMesssage);
